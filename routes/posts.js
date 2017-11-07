@@ -4,7 +4,7 @@ var router = express.Router();
 var checkLogin = require('../middlewares/check').checkLogin;
 //root dir
 router.get('/',function(req,res,next){
-    res.send(req.flash());
+    res.render('posts');
 });
 // send aritice
 router.post('/',checkLogin,function(req,res,next){

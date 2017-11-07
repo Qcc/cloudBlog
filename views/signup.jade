@@ -1,9 +1,10 @@
 extends header
 block content
+  include ./nav.jade
   div(class="ui grid")
     div(class="four wide column")
     div(class="eight wide column")
-      form(class="ui form segment" method="post" enctype="multipart/form-data")
+      form(class="ui form segment" action="signup" method="post" enctype="multipart/form-data")
         div(class="field required")
           label 用户名
           input(placeholder="用户名" type="text" name="name")
@@ -22,7 +23,7 @@ block content
         div(class="field required")
           label 头像
           input(type="file" name="avatar")
-       div(class="field required")
-         label 个人简介
-         textarea(name="bio" rows="5")
-      input(type="submit" class="ui button fluid" value="注册")
+        div(class="field required")
+           label 个人简介
+           textarea(name="bio" rows="5")
+        input(type="submit" class="ui button fluid" value="注册")
