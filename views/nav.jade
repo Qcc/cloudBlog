@@ -1,0 +1,8 @@
+div(class="nav")
+  div(class="ui grid")
+    div(class="four wide column")
+        include ./nav-setting.jade
+    div(class="eight wide column")
+      a(href="/posts")
+        h1= blog.title
+      p= blog.description
