@@ -7,7 +7,7 @@ var UserModel = require('../models/users');
 var checkNotLogin = require('../middlewares/check').checkNotLogin;
 
 router.get('/',checkNotLogin,function(req,res,next){
-    res.render('signup');
+     res.render('signup');
 });
 
 router.post('/',checkNotLogin,function(req,res,next){
@@ -17,7 +17,6 @@ router.post('/',checkNotLogin,function(req,res,next){
     var avatar = req.files.avatar.path.split(path.sep).pop();
     var password = req.fields.password;
     var repassword = req.fields.repassword;
-  console.log('running this line');
     // 校验参数
     try {
       if (!(name.length >= 1 && name.length <= 10)) {
@@ -39,16 +38,16 @@ router.post('/',checkNotLogin,function(req,res,next){
         throw new Error('两次输入密码不一致');
       }
     } catch (e) {
-        console.log('注册失败， '+e.message+' 异步删除上传的')
-      // 注册失败，异步删除上传的头像
-      fs.unlink(req.files.avatar.path,function(err,result){
-        if(err) return err;
-        console.log('删除成功！');
-      });
-      req.flash(e.message);
-      return res.redirect('/signup');
+        // 注册失败，异步删除上传的头像
+        fs.unlink(req.files.avatar.path,function(err,result){
+            if(err) return err;
+        });
+        req.flash('error',e.message);
+        console.log('1注册失败， 异步删除上传的')
+        return res.redirect('/signup');
     }
-  
+    console.log('2注册失败， 异步删除上传的')
+    
     // 明文密码加密
     password = sha1(password);
   
