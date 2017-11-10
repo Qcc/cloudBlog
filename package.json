@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "dev":"supervisor --harmony index.js"
+    "dev": "supervisor --harmony index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/Qcc/cloudBlog#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "connect-mongo": "^2.0.0",
+    "express": "^4.16.2",
+    "express-session": "^1.15.6",
+    "jade": "^1.11.0"
   }
 }
