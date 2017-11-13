@@ -1,6 +1,7 @@
 var express = require('express');
 var session = require('express-session');
 var cfg = require('./config/default');
+var pkg = require('./package');
 var MongoStore = require('connect-mongo')(session);
 var router = require('./router/route');
 
@@ -26,6 +27,11 @@ app.use(session({
   })
 }));
 
+// 设置模板全局常量
+app.locals.blog = {
+  title: pkg.name,
+  description: pkg.description
+};
 router(app);
 
 var server = app.listen(3000, function () {

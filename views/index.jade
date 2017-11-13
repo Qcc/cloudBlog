@@ -2,4 +2,40 @@ extends ./layout.jade
 
 block content
   div(class="container")
-    h2 这是首页内容
+    div.row
+      div.col-md-9
+        div(class="jumbotron")
+          h2 文章标题
+          small 作者：kevin 时间：2017-11-05
+          p 这是一篇文章内容，这是一篇文章内容，这是一篇文章内容。
+            a(class="btn btn-primary" href="/#navbar" role="button") 查看全部 &raquo;
+        div(class="jumbotron")
+          h2 文章标题
+          p 这是一篇文章内容，这是一篇文章内容，这是一篇文章内容。
+            a(class="btn btn-primary" href="/#navbar" role="button") 查看全部 &raquo;
+        div(class="jumbotron")
+          h2 文章标题
+          p 这是一篇文章内容，这是一篇文章内容，这是一篇文章内容。
+            a(class="btn btn-primary" href="/#navbar" role="button") 查看全部 &raquo;
+      div.col-md-3
+        div.list-group 
+          a(href="#" class="list-group-item disabled") 文章分类
+          a(href="#" class="list-group-item") linux(5)
+          a(href="#" class="list-group-item") Nodejs(3)
+          a(href="#" class="list-group-item") Express(6)
+          a(href="#" class="list-group-item") 个人感悟(6)
+          a(href="#" class="list-group-item") 开源项目(1)
+        h4 标签
+        span(style="display: inline-block;margin:5px" class="label label-default") 开源
+        span(style="display: inline-block;margin:5px" class="label label-primary") ubuntu
+        span(style="display: inline-block;margin:5px" class="label label-success") es6
+        span(style="display: inline-block;margin:5px" class="label label-info") mvvm
+        span(style="display: inline-block;margin:5px" class="label label-warning") vue
+        span(style="display: inline-block;margin:5px" class="label label-danger") react
+        span(style="display: inline-block;margin:5px" class="label label-default") 开源
+        span(style="display: inline-block;margin:5px" class="label label-primary") ubuntu
+        span(style="display: inline-block;margin:5px" class="label label-success") es6
+        span(style="display: inline-block;margin:5px" class="label label-info") mvvm
+        span(style="display: inline-block;margin:5px" class="label label-warning") vue
+        span(style="display: inline-block;margin:5px" class="label label-danger") react
+        h4 最新留言
