@@ -10,4 +10,16 @@ html
     script(src="/js/init.js")    
     link(rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css")
   body
+    nav(class="navbar navbar-default")
+      div(class="container")
+        div(class="navbar-header")
+          a(class="navbar-left" style="margin:5px" href="#")
+            img(alt="logo" src="/img/logo.png")
+        ul(class="nav navbar-nav navbar-right")
+          li(role="presentation" class="active") #[a(href="/index") 首页]
+          li(role="presentation") #[a(href="/list") 文章]
+          li(role="presentation") #[a(href="/contact") 联系方式]
+          li(role="presentation") #[a(href="/signin") 登录/注册]
     block content
+    div(class="container")
+      h6 这是底部
