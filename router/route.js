@@ -9,7 +9,8 @@ module.exports = function(app){
   app.use('/registry',require('./page/registry.js'));
   app.use('/edit',require('./page/edit.js'));
   app.use('/contact',require('./page/contact.js'));  
-  app.use('/blog',require('./page/blog.js'));    
+  app.use('/blog',require('./page/blog.js'));  
+  app.use('/search',require('./page/search.js'));      
   app.use('/error',require('./page/error.js'));
   // 404 page
   app.use(function (req, res) {
