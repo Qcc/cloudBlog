@@ -1,27 +1,23 @@
-var mongouri = require('../config/default').mongodb;
-var mongoose =require('mongosse');
-var Schema = mongoose.Schema;
-mongose.connect(mongoUri,function(err){
-  console.log(err,'链接数据库失败！');
+var mongoUri = require('../config/default').mongodb;
+var mongoose = require('mongoose');
+
+mongoose.connect(mongoUri,{useMongoClient:true});
+// mongoose.Promise = global.Promise;
+const db = mongoose.connection;
+
+
+db.once('open' ,() => {
+  console.log('连接数据库成功')
+})
+
+db.on('error', function(error) {
+  console.error('Error in MongoDb connection: ' + error);
+  mongoose.disconnect();
 });
 
-var blogSchema = new Schema({
-  title: String,
-  author: String,
-  body: String,
-  comments:[{author: String,body: String,date: Date}],
-  date: {type: Date, default:Date.now},
-  hidden:Boolean,
-  recommend:Boolean,
-  meta:{read:Number,comment:Number}
+db.on('close', function() {
+  console.log('数据库断开，重新连接数据库');
+  mongoose.connect(config.url, {server:{auto_reconnect:true}});
 });
-blogSchema.methods.chazhao = function(cb){
-  return this.model('Blog').find({author:kevin});
-}
 
-var Blog = mongoose.model('Blog',blogSchema);
-var b1 = new Blog({author:'kevin'});
-
-b1.chazhao(function(err,blog){
-  console.log(blog,"11111");
-});
+module.exports = db;

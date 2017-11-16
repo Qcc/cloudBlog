@@ -1,9 +1,13 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var mongoose = require('mongoose');
 var cfg = require('./config/default');
 var pkg = require('./package');
 var MongoStore = require('connect-mongo')(session);
 var router = require('./router/route');
+// 连接数据库
+require('./db/mongo');
 
 var app = express();
 
@@ -15,6 +19,7 @@ app.set('view engine', 'jade');
 app.use(express.static(__dirname + '/public', {
   redirect: true
 }));
+app.use(cookieParser());
 // session 中间件
 app.use(session({
   name: cfg.session.key,// 设置 cookie 中保存 session id 的字段名称

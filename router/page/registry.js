@@ -1,9 +1,9 @@
+
 var express = require('express');
+var users = require('../../controller/user');
 var router = express.Router();
 
-router.get('/',function(req,res,next){
-  res.render('registry');
-});
-
+router.get('/',users.findByName);
+router.get('/create',users.createUser);
 
 module.exports = router;

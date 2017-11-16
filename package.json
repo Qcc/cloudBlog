@@ -22,6 +22,7 @@
   "homepage": "https://github.com/Qcc/cloudBlog#readme",
   "dependencies": {
     "connect-mongo": "^2.0.0",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "jade": "^1.11.0",
