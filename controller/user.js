@@ -11,12 +11,15 @@ module.exports = {
     });
   },
   findByName:function(req,res,next){
-    User.find({username: 'diyigeyonghu'},function(err,users){
-      if(err){
-        res.send(err);
-      }else{
-        res.send(users);
-      }
-    })
+    console.log(req.cookie);
+    var j = req.toString();
+        res.send(j);    
+    // User.find({username: 'diyigeyonghu'},function(err,users){
+    //   if(err){
+    //     res.send(err);
+    //   }else{
+    //     res.send(users);
+    //   }
+    // });
   }
 }
