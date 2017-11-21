@@ -1,0 +1,137 @@
+html {overflow-y:scroll;} 
+body {margin:0; padding:0;
+  font-family: PingFang SC,Hiragino Sans GB,Microsoft YaHei,WenQuanYi Micro Hei,Helvetica Neue,Arial,sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #657180;
+  background:#ffffff;} 
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote,p{padding:0; margin:0;} 
+table,td,tr,th{font-size:12px;} 
+li{list-style-type:none;} 
+img{vertical-align:top;border:0;} 
+ol,ul {list-style:none;} 
+h1,h2,h3,h4,h5,h6{font-size:14px; font-weight:normal;} 
+address,cite,code,em,th {font-weight:normal; font-style:normal;}
+a{ 
+  color: #222;
+  background: 0 0;
+  text-decoration: none;
+  outline: 0;
+  cursor: pointer;
+  transition: color .2s ease;
+}
+
+
+
+/*头部 */
+.index-header-continner{
+  width: 100%;
+  min-width: 1220px;
+  height: 34px;
+  margin:0 0 16px 0; 
+}
+.index-header-nav{
+  width: 100%;
+  height: 34px;
+  background-color: #272727;
+  color: #fff;
+  font-size: 14px;
+  line-height: 34px;
+}
+.h-left{
+  float: left;
+}
+.h-left li{
+  float: left;
+  padding: 0 10px;
+}
+.weather{
+  border-left: 1px solid #3a3a3a;
+}
+.h-right{
+  float: right;
+}
+.h-right li{
+  float: right;
+  padding: 0 10px;
+}
+.border-line{
+  border-left: 1px solid #3a3a3a;
+}
+.h-right li.login-button{
+  padding: 0 20px;
+  background-color: #4777FF;
+}
+
+/* 内容 */
+.content-container {
+  width: 1170px;
+  margin: 0 auto;
+  margin-top: 16px;
+  min-height: 1500px;
+}
+/* 菜单 */
+.nav-box{
+  width: 110px;
+  height: 600px;
+  margin-right: 30px;
+  float: left;  
+}
+.nav-list{
+  width: 110px;
+}
+.logo {
+  display: block;
+  width: 110px;
+  height: 28px;
+  margin-bottom: 16px;
+}
+.nav-item.active {
+  background-color: #4777FF;
+  color: #fff;
+}
+
+.nav-item:visited {
+  color: #444;
+}
+
+.nav-item:link{}
+.nav-item:visited{}
+.nav-item:hover{
+  background-color: #4777FF;
+  color: #fff;
+}
+.nav-item:active{}
+.menu-list a{
+  display: block;
+  width: 110px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #444;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  transition-property: color,background-color;
+}
+.nav-item.active-menu{
+  background-color: #4777FF;
+  color: #fff;
+}
+.nav-item span {
+  font-size: 16px;
+  display: inline-block;
+}
+/* 文章 */
+.article-content{
+  width: 660px;
+  float: left;
+  background-color: #eee;
+  
+}
+/* 侧边栏 */
+.aside-content{
+  width: 340px;
+  float: right;
+  background-color: #ccc;
+  
+}
