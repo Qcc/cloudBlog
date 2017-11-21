@@ -126,7 +126,69 @@ a{
   width: 660px;
   float: left;
   background-color: #eee;
-  
+}
+/* 轮播 */
+.carousel-box{
+  width: 660px;
+}
+.carousel-right{
+  float: right;
+  background-color: #272727;
+  height: 300px;
+  width: 60px;
+  font-size: 14px;
+  color: #fff
+}
+.carousel-right ul{
+  padding: 7px 0;
+}
+.carousel-right li{
+  cursor: pointer;
+  display: inline-block;
+  height: 36px;
+  width: 60px;
+  margin-bottom: 14px;
+  line-height: 36px;
+  text-align: center;
+}
+/* 添加轮播菜单右侧小箭头 */
+.carousel-right .menu-focus {
+  z-index: 2;
+  background: #4777FF;
+  position: relative;
+}
+.carousel-right .menu-focus:before {
+  content: "";
+  right: 100%;
+  top: 13px;
+  position: absolute;
+  border-top: 5px solid transparent;
+  border-right: 8px solid #4777FF;
+  border-bottom: 5px solid transparent;
+}  
+.carousel-left{
+  float: left;
+  height: 300px;
+  width: 600px;
+  overflow: hidden;
+  position: relative;
+}
+.img-item{
+  z-index: 1;  
+  position: absolute;
+  top: 0;
+  left: 0;  
+  display: none;
+}
+.img-focus{
+  display: inline-block;
+}
+.carousel-left p{
+  color: #fff;
+  font-size: 20px;
+  position: absolute;
+  bottom: 10px;
+  left: 20px;
 }
 /* 侧边栏 */
 .aside-content{
