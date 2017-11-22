@@ -432,3 +432,13 @@ a{
   height: 27px;
   vertical-align: middle;
 }
+.bread-box{
+  font-size: 16px;
+  margin-left: 20px;
+  line-height: 58px;
+  float: left;
+}
+.blog-search{
+  float: right;
+  margin-top: 7px;
+}
