@@ -2,14 +2,12 @@ extends ./blog_layout.jade
 
 block content
   div(class="content-container")   
-    include ./components/nav.jade    
+    include ./components/share.jade    
     div(class="article-content")
-      div
-        include ./components/list.jade        
-    div(class="aside-content")
-      div.search-box
-        div.search-wrap
-          input(class="search-input" placeholder="请输入要搜索的内容" )
-          input(type="button" class="search-btn" value="搜索")       
+      include ./components/article.jade        
+      include ./components/related.jade
+    div(class="aside-content")      
       include ./components/hot.jade
+      include ./components/hotpictrue.jade      
+      
       

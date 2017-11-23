@@ -79,6 +79,12 @@ a{
   min-height: 1500px;
 }
 /* 菜单 */
+/* 固定在顶部 */
+.fixed {
+  position: fixed;
+  top: 10px;
+  z-index: 30;
+}
 .nav-box{
   width: 110px;
   height: 600px;
@@ -246,7 +252,7 @@ a{
   width: 100%;
   vertical-align: middle;
 }
-.article-title{
+.right-news .article-title{
   display: block;
   font-size: 20px;
   line-height: 1.3;
@@ -259,7 +265,7 @@ a{
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.article-footer{
+.right-news .article-footer{
   font-size: 12px;
   color: #999;
   margin-top: 10px;
@@ -334,6 +340,7 @@ a{
     background-color: #f4f5f6;
     margin-bottom: 16px;
     padding: 15px 20px 20px;
+    clear: both;
 }
 .module-title{
   color: #222;
@@ -441,4 +448,188 @@ a{
 .blog-search{
   float: right;
   margin-top: 7px;
+}
+/* 详情页分享链接 */
+.share-coment{
+  margin-top: 20px;
+  margin-bottom: 14px;
+}
+.share-coment>a{
+  display: block;
+  height: 34px;
+  font-size: 16px;
+}
+.share-line{
+  background: #e8e8e8;
+  height: 1px;
+}
+.share-coment i{
+  display: inline-block;
+  vertical-align: middle;  
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+  background: url("/toutiao/img/coments.png") no-repeat center;
+}
+.share-type{
+  margin-top: 14px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.share-type>i{
+  display: inline-block;
+  vertical-align: middle;  
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
+}
+.share-type>.weibo{
+  background: url("/toutiao/img/sina.png") no-repeat center;
+}
+.share-type>.weichat{
+  background: url("/toutiao/img/weichat.png") no-repeat center;
+}
+.share-type>.qqzone{
+  background: url("/toutiao/img/qq.png") no-repeat center;
+}
+/* 详情页正文 */
+.article-box{
+  min-height: 200px;
+}
+.article-box .article-title{
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 44px;
+  color: #222;
+}
+.article-box .article-sub{
+  margin-top: 12px;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+.article-sub>.article-type{
+  display: inline-block;
+  padding: 2px;
+  border: 1px solid #999;
+  line-height: 12px;
+  color: #777;  
+  margin-right: 5px;  
+}
+.article-sub>.article-author{
+  color: #777;
+  margin-right: 5px;
+}
+.article-sub>.article-time{
+  color: #777;
+  margin-right: 5px;
+}
+.article-box .article-content{
+  font-size: 16px;
+  line-height: 28px;
+  color: #222;
+  word-wrap: break-word;
+  margin-bottom: 24px;
+}
+.article-box .article-content p{
+  margin: 16px 0;
+}
+.img-caption{
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+  line-height: 16px;
+  margin-top: 0;
+}
+.article-box .article-content img{ 
+  max-width: 100%;
+  display: block;
+  margin: 10px auto;
+}
+/* 正文尾部标签 */
+.article-box .article-tag{
+  margin-bottom: 28px;
+}
+.article-tag>.footer-tag{
+  display: inline-block;
+  vertical-align: middle;
+  width: 21px;
+  height: 21px;
+  background: url("/toutiao/img/tag.png") no-repeat center;
+}
+.article-tag>.footer-tag-list{
+  display: inline-block;
+  vertical-align: middle;
+}
+.footer-tag-list li{
+  float: left;
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 14px;
+}
+.footer-tag-list li:before{
+  content: "/";
+  padding-right: 10px;
+  color: #e0e0e0;
+}
+.footer-tag-list a{
+  color: #406599;
+}
+/* 相关推荐 */
+.related-box{
+  display: block;
+}
+.related-title{
+  position: relative;
+  font-size: 18px;
+  color: #222;
+  line-height: 18px;
+  padding-left: 16px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.related-title:before{
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: "";
+  width: 4px;
+  height: 18px;
+  background: #4777FF;
+  border-radius: 4px;
+}
+.related-warp{
+  position: relative;
+}
+/* 精彩图片 */
+.hotpic-list{
+  margin-right: -12px;
+  margin-bottom: -16px;
+}
+.hotpic-list>.hotpic-item{
+  margin-right: 12px;
+  margin-bottom: 16px;
+  width: 144px;
+  float: left;
+}
+.hotpic-item .hotpic-imgwarp{
+  position: relative;
+  width: 144px;
+  height: 84px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  display: inline-block;
+  text-align: center;
+  background: #e8e8e8;
+}
+.hotpic-imgwarp>img{
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  transition: all .3s ease-out .1s;
+  /* transform: matrix(1.05,0,0,1.05,0,0); */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.hotpic-imgwarp>img:hover{
+  transform: scale(1.05); 
 }
