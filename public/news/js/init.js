@@ -46,15 +46,19 @@ $(document).ready(function(){
 
 //固定导航 分享模块
 var nav=$(".nav-style"); //得到导航对象
+var sub=$(".subtype-box"); //得到子菜单
+
 var win=$(window); //得到窗口对象
 var sc=$(document);//得到document文档对象。
 win.scroll(function(){
   if(sc.scrollTop()>=100){
     nav.addClass("fixed"); 
+    sub.addClass("sub-fixed");     
   //  $(".nav-style").fadeIn(100); 
   }else{
     // $(".fixed").fadeOut(100);
    nav.removeClass("fixed");
+   sub.removeClass("sub-fixed");   
   }
 })
 

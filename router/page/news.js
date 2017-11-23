@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/',function(req,res,next){
-  res.render('error404');
+  res.header("X-Powered-By", 'ASP.NET');
+  res.render('./news/blog',{title:'个人博客'});
 });
 
 
