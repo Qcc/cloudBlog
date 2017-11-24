@@ -5,6 +5,7 @@ module.exports = function(app){
 
   app.use('/index',require('./page/index.js'));
   app.use('/images',require('./page/images.js'));
+  app.use('/image',require('./page/image.js'));  
   app.use('/news',require('./page/news.js'));  
   app.use('/error',require('./page/error.js'));
   // 404 page

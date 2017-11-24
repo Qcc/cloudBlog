@@ -1,0 +1,55 @@
+extends ./news_layout.jade
+
+block content
+  div(class="content-container")
+    div.gallery-box
+      div.gallery
+        div.image-box
+          ul.img-list
+            li.img-item
+              div.image-inner
+                img(src="/news/img/12.jpeg", alt="11")
+              a(href="#" class="origin-img" title="查看原图") ㊉
+        div.imageinfo-box
+          div.img-info-inner
+            h2.img-title 
+              span 分类
+              |陕西一大学食堂肉菜不到10块，味道还不错，还记得你吃过的食堂吗
+            div.img-abstract 
+              span.img-abs-index 
+                em 14
+                |/15
+              |在食堂的一角，一个坐着轮椅的白发老奶奶也来就餐，也不知道这些伙食老奶奶吃的惯么，不过，小编想说的是，大部分的学校食堂别说老奶奶，就连你自己怕都不咋去吃吧？毕竟，味道确实一般，你觉得呢？
+            ul.img-tag
+              li.first-img-tag
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+              li
+                a(href="#") 美食
+          div.img-info-share
+            div.img-orgin
+              span 作者 &nbsp;⋅&nbsp;
+              span 2017-11-10 14:25:02                                      
+            div.share-pic
+              span 分享到
+              span
+                i.weibo
+              span
+                i.weichat
+              span
+                i.qqzone
+    include ./components/imgrelated.jade
