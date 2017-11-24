@@ -1178,3 +1178,46 @@ a{
   border: 1px solid #999;
   box-sizing: border-box;
 }
+/* 搜索框 */
+.search-bar{
+  display: block;
+}
+.search-box{
+  display: block;
+}
+.search-left{
+  width: 580px;
+  height: 40px;
+  padding: 0 16px;
+  background-color: #fff;
+  border: 1px solid #4777FF;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 4px 0 0 4px;
+  display: inline-block;
+}
+.search-left>input{
+  width: 100%;
+  border: 0;
+  outline: 0;
+  font-size: 16px;
+  height: 16px;
+  line-height: 16px;
+  background-color: #fff;
+  padding: 11px 0;
+  color: #222;
+}
+.search-right{
+  float: right;
+}
+.search-right>input{
+  outline: 0;
+  border: 0;
+  width: 80px;
+  background: #4777FF;
+  font-size: 16px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  border-radius: 0 4px 4px 0;
+}
