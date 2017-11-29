@@ -1,0 +1,109 @@
+extends ./index_layout.jade
+
+block content
+  div.row
+    div.col-xs-3.sidebar
+      ul.nav-left
+        li
+          a(href="overview.html") 
+            i(class="glyphicon glyphicon-globe" aria-hidden="true")
+            |预览
+        li.active 
+          a(href="section.html") 
+            i(class="glyphicon glyphicon-indent-right" aria-hidden="true")
+            |栏目管理
+        li
+          a(href="pusharticle.html") 
+            i(class="glyphicon glyphicon-pencil" aria-hidden="true")
+            |发表文章
+        li
+          a(href="articlemanage.html") 
+            i(class="glyphicon glyphicon-list-alt" aria-hidden="true")
+            |文章管理
+        li
+          a(href="pushpicture.html") 
+            i(class="glyphicon glyphicon-picture" aria-hidden="true")
+            |发表图片
+        li
+          a(href="picturemanage.html") 
+            i(class="glyphicon glyphicon-folder-open" aria-hidden="true")
+            |图片管理    
+    div.col-xs-9
+      h4 根路径
+      ol.breadcrumb
+        li 
+          div.btn-group
+            button(type="button" class="btn btn-default") 科技
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 上移
+              li
+                a(href="#") 下移
+              li(role="separator" class="divider")
+              li
+                a(href="#") 追加
+              li
+                a(href="#") 删除
+        li.active
+          div.btn-group
+            button(type="button" class="btn btn-default") 手机
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 上移
+              li
+                a(href="#") 下移
+              li(role="separator" class="divider")
+              li
+                a(href="#") 追加
+              li
+                a(href="#") 删除
+      ol.breadcrumb
+        li
+          div.btn-group
+            button(type="button" class="btn btn-default") 图片
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 上移
+              li
+                a(href="#") 下移
+              li(role="separator" class="divider")
+              li
+                a(href="#") 追加
+              li
+                a(href="#") 删除
+        li 
+          div.btn-group
+            button(type="button" class="btn btn-default") 搞笑
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 上移
+              li
+                a(href="#") 下移
+              li(role="separator" class="divider")
+              li
+                a(href="#") 追加
+              li
+                a(href="#") 删除
+        li.active
+          div.btn-group
+            button(type="button" class="btn btn-default") 动态
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              span.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 上移
+              li
+                a(href="#") 下移
+              li(role="separator" class="divider")
+              li
+                a(href="#") 追加
+              li
+                a(href="#") 删除

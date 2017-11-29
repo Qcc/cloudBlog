@@ -20,3 +20,33 @@ a{
   cursor: pointer;
   transition: color .2s ease;
 }
+
+.sidebar {
+  border-right: 1px solid #eee;
+}
+.nav-left{
+  display: block;
+  margin: 0 -15px;
+  padding-top: 20px;
+}
+.nav-left>li{
+  position: relative;
+  display: block;
+}
+.nav-left>li.active{
+  background: #aaa;
+}
+.nav-left>li.active>a{
+  color: #fff;
+}
+.nav-left>li>a{
+  line-height: 40px;
+  display: block;
+  padding: 0 40px;
+  font-size: 14px;
+  min-height: 38px;
+  border-bottom: 2px solid #fff;
+}
+.nav-left>li>a>i{
+  padding-right: 15px;
+}
