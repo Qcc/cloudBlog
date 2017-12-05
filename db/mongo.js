@@ -1,6 +1,6 @@
 var mongoUri = require('../config/default').mongodb;
 var mongoose = require('mongoose');
-
+mongoose.Promise = global.Promise;
 mongoose.connect(mongoUri,{useMongoClient:true});
 // mongoose.Promise = global.Promise;
 const db = mongoose.connection;

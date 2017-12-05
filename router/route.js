@@ -6,7 +6,8 @@ module.exports = function(app){
   app.use('/index.html',require('./client/index.js'));
   app.use('/images',require('./client/images.js'));
   app.use('/image',require('./client/image.js'));  
-  app.use('/news',require('./client/news.js'));  
+  app.use('/news',require('./client/news.js'));
+  
   // server端
   app.use('/kevin',require('./server/admin.js'));  
   

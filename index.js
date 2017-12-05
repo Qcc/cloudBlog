@@ -1,5 +1,6 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongoose = require('mongoose');
 var cfg = require('./config/default');
@@ -20,6 +21,7 @@ app.use(express.static(__dirname + '/public', {
   redirect: true
 }));
 app.use(cookieParser());
+app.use(bodyParser.json());
 // session 中间件
 app.use(session({
   name: cfg.session.key,// 设置 cookie 中保存 session id 的字段名称
