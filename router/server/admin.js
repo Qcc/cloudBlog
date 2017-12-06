@@ -20,6 +20,7 @@ router.post('/section.api',function(req,res,next){
   Columns.createColumns(req, res, next);
 });
 router.delete('/section.api',function(req,res,next){
+  console.log('req.body', req.body)  
   Columns.deleteColumns (req, res, next);
 });
 router.put('/section.api',function(req,res,next){
