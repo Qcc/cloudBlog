@@ -3,6 +3,7 @@ var router = express.Router();
 
 router.get('/',function(req,res,next){
   res.header("X-Powered-By", 'ASP.NET');
+  res.header("Server", 'Microsoft-IIS/6.0');  
   res.render('./news/index',{title:'个人博客'});
 });
 
