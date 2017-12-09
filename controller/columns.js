@@ -2,12 +2,8 @@ var Columns = require('../models/columns');
 
 module.exports = {
   createColumns:function(req,res,next){
-    if(req.body.parent){
-      Columns.update({idx:req.body.parent.idx},{$push:{children:req.body.children}},cb);
-    }else{
-      var columns = new Columns(req.body.children)
-      columns.save(cb);
-    }
+    var columns = new Columns(req.body)
+    columns.save(cb);
     function cb(err, doc){
       if(err){
         res.send({status:-1, msg:err});
@@ -27,11 +23,7 @@ module.exports = {
     })
   },
   deleteColumns: function(req, res, next){
-    if(req.body.parent){
-      Columns.update({idx: req.body.parent.idx}, {$pull: {children:req.body.children}}, cb)  
-    }else{
-      Columns.remove({idx: req.body.children.idx,label:req.body.children.label}, cb)              
-    }
+    Columns.remove({idx: req.body.idx,label:req.body.label}, cb)
     function cb(err, doc){
       if(err){
         res.send({status:-1, msg:err});
