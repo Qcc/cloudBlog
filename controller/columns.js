@@ -8,18 +8,16 @@ module.exports = {
       if(err){
         res.send({status:-1, msg:err});
       }else{
-        res.send({status: 200, msg: '添加类目成功'})
+        res.send({status: 200, msg: '添加类目成功', entity: doc})
       }
     }
   },
   updateColumns: function(req, res, next){
     if(req.body.sectionName){
-      Columns.update({idx: req.body.idx,label:req.body.label}, {label:req.body.sectionName},cb);
+      Columns.update({_id: req.body._id}, {label:req.body.sectionName},cb);
     }else{
-      Columns.update(req.body.source._id, req.body.target,function(err,doc){
-
-      });
-      Columns.update(req.body.target._id, req.body.source,cb);            
+      Columns.update(req.body.source._id, {level: req.body.target.level},cb);
+      Columns.update(req.body.target._id, {level: req.body.source.level},cb);            
     }
     function cb(err, doc){
       if(err){
@@ -30,7 +28,7 @@ module.exports = {
     }
   },
   deleteColumns: function(req, res, next){
-    Columns.remove({idx: req.body.idx,label:req.body.label}, cb)
+    Columns.remove({_id: req.body._id}, cb)
     function cb(err, doc){
       if(err){
         res.send({status:-1, msg:err});
