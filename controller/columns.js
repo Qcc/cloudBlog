@@ -56,5 +56,10 @@ module.exports = {
         return res.send({status: 200, msg: 'ok', entity: doc});
       }
     });
+  },
+  queryAllNav: function(func){
+    Columns.find().exec(function(err, doc){
+      func(err, doc);
+    });
   }
 }
