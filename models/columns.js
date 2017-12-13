@@ -2,15 +2,12 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var parentSchema = new Schema({
-  label: {type: String, required: true},
-  level: {type: Number, required: true},
-  parentId: {type: String, required: true},  
-});
 var columnsSchema = new Schema({
   label: {type: String, required: true},
   level: {type: Number, required: true},
-  parent: parentSchema,  
+  path: {type: String, required: true},
+  type: {type: String, required: true},
+  parent: {type: String},  
   date:{type: Date, default:Date.now}
 });
 
