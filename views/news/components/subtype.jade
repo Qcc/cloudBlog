@@ -1,8 +1,5 @@
 div.subtype-box
   ul.subtype-list
-    li.subtype-select
-      a(href="#") 全部
-    li.subtype-item
-      a(href="#") 子类2
-    li.subtype-item
-      a(href="#") 子类3
+    each item in currentType.children
+      li(class=item.select)
+        a(href=item.path)=item.label

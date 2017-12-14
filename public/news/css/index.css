@@ -655,7 +655,7 @@ a{
   height: 38px;
   width: 100%;
   z-index: 3;
-  margin-bottom: 16px;
+  margin-bottom: 2px;
 }
 .subtype-list{
   top: -50px;
@@ -663,10 +663,8 @@ a{
   height: 38px;
   border-bottom: 2px solid #f2f2f2;
 }
-.subtype-item{
-  margin-left: 33px;
-}
 .subtype-list li{ 
+  margin-right: 33px;
   line-height: 38px;
   font-size: 16px;
   display: inline-block;

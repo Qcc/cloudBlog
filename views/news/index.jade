@@ -1,3 +1,4 @@
+//- 首页模板
 extends ./index_layout.jade
 
 block content
@@ -5,8 +6,10 @@ block content
     include ./components/nav.jade    
     div(class="article-content")
       div
-        include ./components/carousel.jade
-        include ./components/subtype.jade                
+        if index === true
+          include ./components/carousel.jade            
+        if currentType.children.length !== 0
+          include ./components/subtype.jade 
         include ./components/list.jade        
     div(class="aside-content")
       div.search-box

@@ -12,6 +12,7 @@ router.all('*',function (req, res, next) {
     res.send(200); // 让options请求快速返回
   }
   else {
+    console.log('tianjiayu')
     next();
   }
 });

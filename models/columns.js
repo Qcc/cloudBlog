@@ -3,9 +3,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var columnsSchema = new Schema({
-  label: {type: String, required: true},
+  label: {type: String, required: true, unique: true},
   level: {type: Number, required: true},
-  path: {type: String, required: true},
+  path: {type: String, required: true, unique: true},
   type: {type: String, required: true},
   parent: {type: String},  
   date:{type: Date, default:Date.now}
