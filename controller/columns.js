@@ -156,6 +156,10 @@ module.exports = {
           }else if(nav[j].children.length !== 0){
             nav[j].children.unshift({label:'全部', path: nav[j].path});            
           }
+          // 菜单序号大于11会显示不出来，与10互换
+          if(nav[j].path === activeMenu && j > 10){
+            nav.splice(10,0,nav.splice(j,1)[0]);
+          }
         }
       }
       if(activeMenu === ''){

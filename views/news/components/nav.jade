@@ -5,12 +5,19 @@ div(class="nav-box")
       a(href="/" class="logo")
         img(src="/news/img/logo.png", alt="网站logo" style="width: 108px; height: 27px;")
       ul(class="menu-list")
-        //- each item in nav
-        //-   li
-        //-     a(href=item.path class="nav-item " + item.activeMenu)
-        //-       span=item.label
         - for (var x = 0; x < nav.length; x++)
           if x < 12
             li
               a(href=nav[x].path class="nav-item " + nav[x].activeMenu)
                 span=nav[x].label
+          else if x === 12
+            li.more-menu
+              a(href='javascript:void(0);' class="nav-item")
+                span 更多
+              div.more-layer
+                ul
+                  - for (var x = 0; x < nav.length; x++)
+                    if x > 11
+                      li
+                        a(href=nav[x].path class="nav-item " + nav[x].activeMenu)
+                          span=nav[x].label

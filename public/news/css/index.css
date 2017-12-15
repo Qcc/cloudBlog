@@ -449,6 +449,28 @@ a{
   float: right;
   margin-top: 7px;
 }
+/* 导航底部 更多按钮 */
+.more-menu{
+  position: relative;
+  color: #444;
+}
+.more-menu:hover .more-layer{
+  display: block;  
+}
+.more-layer{
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 110px;
+  width: 220px;
+  z-index: 10;
+  background-color: #fff;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,.12);
+  padding: 5px;
+}
+.more-layer a{
+  float: left;
+}
 /* 详情页分享链接 */
 .share-coment{
   margin-top: 20px;
