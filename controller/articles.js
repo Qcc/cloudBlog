@@ -1,3 +1,4 @@
+// 文章管理模块
 var Articles = require('../models/article');
 
 module.exports = {
@@ -15,5 +16,14 @@ module.exports = {
         return res.send({status: 200, msg: '添加文章成功', entity: doc})
       }
     }
+  },
+  updateArticle:function (req, res, next) {
+    
+  },
+  queryArticle:function (req, res, next) {
+    
+  },
+  deleteArticle:function (req, res, next) {
+    
   }
 }

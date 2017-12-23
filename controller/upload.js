@@ -1,3 +1,5 @@
+// 上传图片模块
+
 var fs = require('fs');
 var multer  = require('multer') // 处理上传文件
 // 创建文件夹

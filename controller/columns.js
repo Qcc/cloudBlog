@@ -1,5 +1,7 @@
+// 网站分组类目管理
 var Columns = require('../models/columns');
-
+var Articles = require('../models/article');
+var Parallel = require('async/parallel');
 module.exports = {
   createColumns:function(req,res,next){
     var columns = new Columns(req.body)
@@ -57,123 +59,94 @@ module.exports = {
       }
     });
   },
-
-  // client 请求
-  // renderIndex: function(req,res,next){
-  //   console.log('首页');
-  //   Columns.find().exec(function(err, doc){
-  //     if(err) return res.render('error');
-  //     var docment = JSON.parse(JSON.stringify(doc));
-  //     var activeMenu = req.baseUrl.slice(1);
-  //     var nav = []
-  //     var isRouter = false;
-  //     var idnex = false;
-  //     if(activeMenu === ''){
-  //       isRouter = true;
-  //       index = true;
-  //     }
-  //     docment.map(function(value,index,arr){
-  //       if(value.parent === null){
-  //         if(value.path === activeMenu){
-  //           value.children = [];
-  //           value.activeMenu = 'active-menu';
-  //           isRouter = true;
-  //         }
-  //         nav.push(value);
-  //       }else{
-  //         for (let i = 0; i < nav.length; i++) {
-  //           if(value.parent === nav[i]._id){
-  //             if(value.path === activeMenu){
-  //               value.select = 'subtype-select';
-  //               isRouter = true;
-  //             }
-  //             nav[i].children.push(value);
-  //             break;
-  //           }
-  //         }
-  //       }
-  //     })
-  //     for(let j = 0; j < nav.length; j++){
-  //       if(nav[j].length !== 0){
-  //         nav[j].children.unshift({label:'全部', path: nav[j].path})
-  //       }
-  //     }
-  //     if(!isRouter){
-  //       return next();
-  //     }
-  //     nav.sort(function(a, b){
-  //       return a.level - b.level
-  //     });
-  //     var currentType = {};
-  //     currentType.children = [];
-  //     nav.unshift({path:'/', label:'推荐', type: 'index', activeMenu:'active-menu'});
-  //     return res.render('./news/index',{nav: nav,currentType: currentType, index: index, title:'个人博客'});
-  //   });
-  // },
-
+  
   clientQueryColumn:function(req, res, next){
-    console.log('ziye');    
-    Columns.find().exec(function(err, doc){
+    Parallel({
+      col: function(callback) {
+        Columns.find({},function(err, column){
+          callback(err, column);
+        });
+      },
+      arti: function(callback) {
+        Articles.find({},function(err, article){
+          callback(err, article);
+        });
+      }
+    },
+    function(err, results) {
       if(err) return res.render('error');
-      var docment = JSON.parse(JSON.stringify(doc));
-      var activeMenu = req.baseUrl.slice(1);
-      var nav = []
-      var index = false;
-      var isRouter = false;
-      var currentType = {};
-      var idnex = false;
-      docment.map(function(value,index,arr){
-        if(value.parent === null){
-          value.children = [];
-          if(value.path === activeMenu){
-            value.activeMenu = 'active-menu';
-            isRouter = true;
-            currentType = value;
-          }
-          nav.push(value);
-        }else{
-          for (let i = 0; i < nav.length; i++) {
-            if(value.parent === nav[i]._id){
-              if(value.path === activeMenu){
-                value.select = 'subtype-select';
-                nav[i].activeMenu = 'active-menu';
-                currentType = nav[i];            
-                isRouter = true;
-              }
-              nav[i].children.push(value);
-              break;
-            }
-          }
-        }
-      })
-      nav.sort(function(a, b){
-        return a.level - b.level
-      })
-      for(let j = 0; j < nav.length; j++){
-        if(nav[j].length !== 0){
-          if(nav[j].path === activeMenu && nav[j].children.length !== 0){
-            nav[j].children.unshift({label:'全部', path: nav[j].path, select:'subtype-select'});
-          }else if(nav[j].children.length !== 0){
-            nav[j].children.unshift({label:'全部', path: nav[j].path});            
-          }
-          // 菜单序号大于11会显示不出来，与10互换
-          if(nav[j].path === activeMenu && j > 10){
-            nav.splice(10,0,nav.splice(j,1)[0]);
-          }
-        }
+      var col = handleCol(results.col, req.baseUrl.slice(1))
+      if(!col){
+        next()
       }
-      if(activeMenu === ''){
-        isRouter = true;
-        index = true;
-        currentType.children = [];
-        nav.unshift({path:'/', label:'推荐', type: 'index', activeMenu:'active-menu'});
-      }else{
-        nav.unshift({path:'/', label:'推荐', type: 'index'});
-      }
-      if(!isRouter){
-        return next();
-      }
-      return res.render('./news/index',{nav: nav,currentType: currentType, index: index, title:'个人博客'});
+      return res.render('./news/index',{nav: col.nav, currentType: col.currentType, index: col.index});    
     });
   }
+}
+
+// 解析目录
+function handleCol (col, url) {
+  var docment = JSON.parse(JSON.stringify(col));
+  var activeMenu = url;
+  var nav = []
+  var index = false;
+  var isRouter = false;
+  var currentType = {};
+  var idnex = false;
+  docment.map(function(value,index,arr){
+    if(value.parent === null){
+      value.children = [];
+      if(value.path === activeMenu){
+        value.activeMenu = 'active-menu';
+        isRouter = true;
+        currentType = value;
+      }
+      nav.push(value);
+    }else{
+      for (let i = 0; i < nav.length; i++) {
+        if(value.parent === nav[i]._id){
+          if(value.path === activeMenu){
+            value.select = 'subtype-select';
+            nav[i].activeMenu = 'active-menu';
+            currentType = nav[i];            
+            isRouter = true;
+          }
+          nav[i].children.push(value);
+          break;
+        }
+      }
+    }
+  })
+  nav.sort(function(a, b){
+    return a.level - b.level
+  })
+  for(let j = 0; j < nav.length; j++){
+    if(nav[j].length !== 0){
+      if(nav[j].path === activeMenu && nav[j].children.length !== 0){
+        nav[j].children.unshift({label:'全部', path: nav[j].path, select:'subtype-select'});
+      }else if(nav[j].children.length !== 0){
+        nav[j].children.unshift({label:'全部', path: nav[j].path});            
+      }
+      // 菜单序号大于11会显示不出来，与10互换
+      if(nav[j].path === activeMenu && j > 10){
+        nav.splice(10,0,nav.splice(j,1)[0]);
+      }
+    }
+  }
+  if(activeMenu === ''){
+    isRouter = true;
+    index = true;
+    currentType.children = [];
+    nav.unshift({path:'/', label:'推荐', type: 'index', activeMenu:'active-menu'});
+  }else{
+    nav.unshift({path:'/', label:'推荐', type: 'index'});
+  }
+  if(!isRouter){
+    return null;
+  }
+  return {nav: nav, currentType: currentType, index: index}
+}
+// 解析目录
+function handleArticle (arti){
+
 }
