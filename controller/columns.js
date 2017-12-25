@@ -2,6 +2,8 @@
 var Columns = require('../models/columns');
 var Articles = require('../models/article');
 var Parallel = require('async/parallel');
+var Waterfall = require('async/waterfall');
+
 module.exports = {
   createColumns:function(req,res,next){
     var columns = new Columns(req.body)
@@ -61,28 +63,116 @@ module.exports = {
   },
   
   clientQueryColumn:function(req, res, next){
-    Parallel({
-      col: function(callback) {
-        Columns.find({},function(err, column){
-          callback(err, column);
-        });
-      },
-      arti: function(callback) {
-        Articles.find({},function(err, article){
-          callback(err, article);
-        });
-      }
-    },
-    function(err, results) {
-      if(err) return res.render('error');
-      var col = handleCol(results.col, req.baseUrl.slice(1))
-      if(!col){
-        next()
-      }
-      return res.render('./news/index',{nav: col.nav, currentType: col.currentType, index: col.index});    
-    });
+    var reqUrl = getColAndArticlePath(req.baseUrl);
+    if(reqUrl.artPath){
+      // 请求的是页面 渲染详情页
+      requireArticle(req, res, next, reqUrl);
+    }else{
+      // 请求的是类目，渲染列表   
+      requireColumn(req, res, next, reqUrl);
+    }
   }
 }
+function requireColumn (req, res, next, reqUrl){
+  Waterfall([
+    function(callback) {
+      Columns.find({},function(err, column){
+        callback(err, column);
+      });
+    },
+    function(column, callback) {
+      var currentId = '';
+      var parentId = '';      
+      var allCol = [{categoryPath: reqUrl.colPath}];
+      for (let i = 0; i < column.length; i++) {
+        if(reqUrl.colPath === column[i].path){
+          parentId = column[i].parent;
+          currentId = column[i]._id;
+          break;
+        }
+      }
+      if(!parentId){
+        for (let j = 0; j < column.length; j++) {
+          if(column[j].path === 'shenghuo'){
+            console.log('parent22 ',column[j].parent === currentId,column[j].parent, currentId)            
+          }
+          if(column[j].parent === currentId){
+            allCol.push({categoryPath: column[j].path});
+          }
+        }
+      }
+      Articles.find({"$or": allCol},function(err, articles){
+        callback(err, column, articles);
+      })
+    }
+    ], 
+    function (err, column, articles) {
+      var col = handleCol(column, req.baseUrl.slice(1))
+      if(!col){
+        next();
+      }
+      var articleList = handleArti(articles)
+      return res.render('./news/index',{
+        nav: col.nav, // 侧边目录导航
+        currentType: col.currentType, // 当前子类
+        index: col.index, // 是否请求首页
+        artiList: articleList // 文章列表
+      });
+  });
+}
+function requireArticle (req, res, next, reqUrl){
+  Parallel({
+    col: function(callback) {
+      Columns.find({},function(err, column){
+        callback(err, column);
+      });
+    },
+    arti: function(callback) {
+      if(reqUrl.articlePath === undefined){
+        Articles.find({categoryPath: reqUrl.colPath},function(err, article){
+          callback(err, article);
+        }).sort({_id:-1}).limit(10);
+      }else{
+        Articles.findOne({_id: reqUrl.articlePath},function(err, article){
+          callback(err, article);
+        })
+      }
+    }
+  },
+  function(err, results) {
+    if(err){
+      console.log(err)
+      return err;
+    }
+        
+  });
+}
+// Parallel({
+//   col: function(callback) {
+//     Columns.find({},function(err, column){
+//       callback(err, column);
+//     });
+//   },
+//   arti: function(callback) {
+//     Articles.find({},function(err, article){
+//       callback(err, article);
+//     }).sort({_id:-1}).limit(10);;
+//   }
+// },
+// function(err, results) {
+//   if(err) return res.render('error');
+//   var col = handleCol(results.col, req.baseUrl.slice(1))
+//   if(!col){
+//     next()
+//   }
+//   var articleList = handleArti(results.arti)
+//   return res.render('./news/index',{
+//     nav: col.nav, // 侧边目录导航
+//     currentType: col.currentType, // 当前子类
+//     index: col.index, // 是否请求首页
+//     artiList: articleList // 文章列表
+//   });  
+// });
 
 // 解析目录
 function handleCol (col, url) {
@@ -146,7 +236,45 @@ function handleCol (col, url) {
   }
   return {nav: nav, currentType: currentType, index: index}
 }
-// 解析目录
-function handleArticle (arti){
+// 处理文章
+function handleArti(articles){
+  for(let i = 0; i < articles.length; i++){
+    articles[i].strDate = fromantDate(articles[i].date);
+    articles[i].articlePath = articles[i].categoryPath + '/' + articles[i]._id + '.html'
+  }
+  return articles
+}
 
+// 修改日期格式
+function fromantDate (d){
+  var date = new Date(d);
+  var year = date.getFullYear();
+  var mon = ComplementZero(date.getMonth() + 1);
+  var day = ComplementZero(date.getDate());
+  var hour = ComplementZero(date.getHours());
+  var min = ComplementZero(date.getMinutes());
+  var sec = ComplementZero(date.getSeconds());
+  var strDate = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+  return strDate;
+}
+function ComplementZero(number){
+  if(number < 10){
+    return '0' + number;
+  }else{
+    return number;
+  }
+}
+// 解析请求url 拆分出目录 与文章ID
+function getColAndArticlePath(url){
+  var reqUrl = {}
+  if(url === ''){
+    // 请求首页展示最新内容
+    return reqUrl;
+  }
+  var urls = url.split('/');
+  if(urls[urls.length - 1].endsWith('.html')){
+    reqUrl.artPath = urls[urls.length - 1].split('.')[0];
+  }
+  reqUrl.colPath = urls[1];
+  return reqUrl
 }

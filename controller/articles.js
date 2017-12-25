@@ -4,9 +4,8 @@ var Articles = require('../models/article');
 module.exports = {
   createArticle: function (req, res, next) {
     req.body.type = 'article';
-    req.body.view = Math.ceil(Math.random() * 2345 + 234);
-    req.body.like = Math.ceil(Math.random() * 234 + 34);
-    console.log(req.body)
+    req.body.view = Math.ceil(Math.random() * 2345 + 134);
+    req.body.like = Math.ceil(Math.random() * 234 + 14);
     var article = new Articles(req.body);
     article.save(cb);
     function cb(err, doc){
@@ -18,7 +17,7 @@ module.exports = {
     }
   },
   updateArticle:function (req, res, next) {
-    
+
   },
   queryArticle:function (req, res, next) {
     

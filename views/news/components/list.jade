@@ -1,55 +1,56 @@
 //- 首页新闻列表
 div.list-box
   ul
-    li
-      div.list-content
-        div.left-img
-          a(class="link-warp" href="#")
-            img(src="/news/img/11.jpeg", alt="11")
-        div.right-news
-          div.right-article
-            div.article-title
-              a(href="#") 老人几年前儿子就走了，可他去世时，子就走了，可他去世时，
-            div.article-footer
-              a(href="#" class="article-type") 分类
-              a(href="#" class="article-author") &nbsp;⋅  作者     
-              a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53                        
-    li
-      div.list-content
-        div.left-img
-          a(class="link-warp" href="#")
-            img(src="/news/img/22.jpeg", alt="11")
-        div.right-news
-          div.right-article
-            div.article-title
-              a(href="#") 大法官大法官开始发，收费方式士大夫个地方噶大法官， 地方
-            div.article-footer
-              a(href="#" class="article-type") 分类
-              a(href="#" class="article-author") &nbsp;⋅  作者     
-              a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53
-    li
-      div.list-content
-        div.left-img
-          a(class="link-warp" href="#")
-            img(src="/news/img/11.jpeg", alt="11")
-        div.right-news
-          div.right-article
-            div.article-title
-              a(href="#") 老人几年前儿子就走了，可他去世时，子就走了，可他去世时，
-            div.article-footer
-              a(href="#" class="article-type") 分类
-              a(href="#" class="article-author") &nbsp;⋅  作者     
-              a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53                        
-    li
-      div.list-content
-        div.left-img
-          a(class="link-warp" href="#")
-            img(src="/news/img/22.jpeg", alt="11")
-        div.right-news
-          div.right-article
-            div.article-title
-              a(href="#") 大法官大法官开始发，收费方式士大夫个地方噶大法官， 地方
-            div.article-footer
-              a(href="#" class="article-type") 分类
-              a(href="#" class="article-author") &nbsp;⋅  作者     
-              a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53
+    - for (var x = 0; x < artiList.length; x++)
+      li
+        div.list-content
+          div.left-img
+            a(class="link-warp" href= artiList[x].articlePath)
+              img(src=artiList[x].titleImg, alt="11")
+          div.right-news
+            div.right-article
+              div.article-title
+                a(href=artiList[x].articlePath)=artiList[x].title
+              div.article-footer
+                a(href=artiList[x].categoryPath class="article-type")=artiList[x].categoryLabel
+                a(href=artiList[x].articlePath class="article-author") &nbsp;⋅ #{artiList[x].author}     
+                a(href=artiList[x].articlePath class="article-time") &nbsp;⋅ #{artiList[x].strDate}                        
+    //- li
+    //-   div.list-content
+    //-     div.left-img
+    //-       a(class="link-warp" href="#")
+    //-         img(src="/news/img/22.jpeg", alt="11")
+    //-     div.right-news
+    //-       div.right-article
+    //-         div.article-title
+    //-           a(href="#") 大法官大法官开始发，收费方式士大夫个地方噶大法官， 地方
+    //-         div.article-footer
+    //-           a(href="#" class="article-type") 分类
+    //-           a(href="#" class="article-author") &nbsp;⋅  作者     
+    //-           a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53
+    //- li
+    //-   div.list-content
+    //-     div.left-img
+    //-       a(class="link-warp" href="#")
+    //-         img(src="/news/img/11.jpeg", alt="11")
+    //-     div.right-news
+    //-       div.right-article
+    //-         div.article-title
+    //-           a(href="#") 老人几年前儿子就走了，可他去世时，子就走了，可他去世时，
+    //-         div.article-footer
+    //-           a(href="#" class="article-type") 分类
+    //-           a(href="#" class="article-author") &nbsp;⋅  作者     
+    //-           a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53                        
+    //- li
+    //-   div.list-content
+    //-     div.left-img
+    //-       a(class="link-warp" href="#")
+    //-         img(src="/news/img/22.jpeg", alt="11")
+    //-     div.right-news
+    //-       div.right-article
+    //-         div.article-title
+    //-           a(href="#") 大法官大法官开始发，收费方式士大夫个地方噶大法官， 地方
+    //-         div.article-footer
+    //-           a(href="#" class="article-type") 分类
+    //-           a(href="#" class="article-author") &nbsp;⋅  作者     
+    //-           a(href="#" class="article-time") &nbsp;⋅  2017-11-20 14:23:53

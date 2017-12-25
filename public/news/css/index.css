@@ -694,8 +694,7 @@ a{
   background: #fff;
 }
 .subtype-select{
-  color: #f85959;
-  border-bottom: 2px solid #f85959;
+  border-bottom: 2px solid #4777FF;
 }
 /* 固定子菜单 */
 .sub-fixed{

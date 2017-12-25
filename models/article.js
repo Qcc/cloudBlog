@@ -14,7 +14,7 @@ var articleSchema = new Schema({
   content: {type: String, required: true},
   type: {type: String, required: true}, //类型 文章 图片 视频
   view: {type: Number},
-  like: {type: Number},  
+  like: {type: Number},
   date:{type: Date, default:Date.now}
 });
 const articles = mongoose.model('articles',articleSchema);
