@@ -1,29 +1,16 @@
 //- 详情页文章正文
 div.article-box
-  h1.article-title 男子为呼吁高考改革故意考零分轰动一时，如今后悔称自己不值得
+  h1.article-title=article.title
   div.article-sub
-    span.article-type 分类
-    span.article-author 作者
-    span.article-time 2017-11-10 12:24:04      
+    a(class="article-type" href='/'+article.categoryPath)=article.categoryLabel
+    span.article-author=article.author
+    span.article-time=article.strDate      
   div.article-content
-    div
-      p 大法师各地市广东佛山个地方噶大法官到沙发噶到沙发噶
-      p 大法师各地市广东佛山法官到沙发噶到沙发噶大法师各地市广东佛山法官到沙发噶到沙发噶大法师各地市广东佛山法官到沙发噶到沙发噶大法师各地市广东佛山法官到沙发噶到沙发噶
-      P
-        img(src="/news/img/1.jpg", alt="111")
-      p.img-caption 大法官
-      p 大法师各地市广东佛山大法官到沙发噶到沙发噶
-      p
-        strong 大法官大法官
-      p 大法师各地市广东佛山到沙发地方个地方噶大法官到沙发噶到沙发噶    
+    div!=article.content
   div.article-tag
-    i.footer-tag
+    svg(class="icon" aria-hidden="true")
+          use(xlink:href="#icon-402050")
     ul.footer-tag-list
-      li
-        a(href="#") 标签
-      li
-        a(href="#") 标签
-      li
-        a(href="#") 标签
-      li
-        a(href="#") 标签
+      - for (var x = 0; x < article.keyword.length; x++)
+        li
+          a(href="#")=article.keyword[x]

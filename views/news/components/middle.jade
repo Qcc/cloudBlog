@@ -5,9 +5,9 @@ div.middle-box
       a(href="/" class="logo")
           img(src="/news/img/logo.png", alt="网站logo" style="width: 108px; height: 27px;")
     div.bread-box
-      a(href="#") 首页&nbsp;/&nbsp;
-      a(href="#") 分类&nbsp;/&nbsp;
-      span 正文
+      a(href="/") 首页&nbsp;/&nbsp;
+      a(href='/'+article.categoryPath)=article.categoryLabel
+      span  / 正文
     div.blog-search
       div.search-box
         div.search-wrap

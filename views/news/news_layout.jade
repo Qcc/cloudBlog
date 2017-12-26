@@ -7,24 +7,28 @@ html
     meta(http-equiv="X-UA-Compatible" content="ie=edge")
     link(rel="stylesheet", href="/news/css/index.css")
     script(src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js")
-    script(src="/news/js/init.js") 
+    script(src="/news/js/init.js")
+    script(src="/news/js/iconfont.js")
   body
     header
       div(class="index-header-continner")
         div(class="index-header-nav")
           ul(class="h-left")
-            li
-              a(href="#") 分类
-            li
-              a(href="#") 分类
-            li
-              a(href="#") 分类
-            li
-              a(href="#") 分类
-            li
-              a(href="#") 分类
-            li
-              a(href="#") 分类
+            - for (var x = 0; x < nav.length; x++)
+              if x < 14
+                li
+                  a(href='/'+nav[x].path)=nav[x].label
+              else if x === 14
+                li.dropdown-more
+                  a(class="nav-item") 更多&nbsp;
+                    svg(class="icon" aria-hidden="true")
+                      use(xlink:href="#icon-arrow-bottom")
+                  div.dropdown-menu
+                    ul
+                      - for (var x = 0; x < nav.length; x++)
+                        if x > 13
+                          li.dropdown-item
+                            a(href='/'+nav[x].path)=nav[x].label
           ul(class="h-right")
             li.border-line 其他板块
             li.border-line 侵权投诉

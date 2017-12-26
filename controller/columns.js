@@ -52,8 +52,8 @@ module.exports = {
     }
   },
   queryColumns: function(req, res, next){
-    Columns.find().exec(function(err, doc){
-      console.log('sql')
+    Columns.find({},function(err, doc){
+      console.log('sql ',doc[3]._id);
       if(err){
         return res.send({status:-1, msg:err});
       }else{
@@ -64,6 +64,7 @@ module.exports = {
   
   clientQueryColumn:function(req, res, next){
     var reqUrl = getColAndArticlePath(req.baseUrl);
+    console.log('reqUrl ', reqUrl);
     if(reqUrl.artPath){
       // 请求的是页面 渲染详情页
       requireArticle(req, res, next, reqUrl);
@@ -82,28 +83,35 @@ function requireColumn (req, res, next, reqUrl){
     },
     function(column, callback) {
       var currentId = '';
-      var parentId = '';      
-      var allCol = [{categoryPath: reqUrl.colPath}];
-      for (let i = 0; i < column.length; i++) {
-        if(reqUrl.colPath === column[i].path){
-          parentId = column[i].parent;
-          currentId = column[i]._id;
-          break;
-        }
-      }
-      if(!parentId){
-        for (let j = 0; j < column.length; j++) {
-          if(column[j].path === 'shenghuo'){
-            console.log('parent22 ',column[j].parent === currentId,column[j].parent, currentId)            
+      var parentId = '';
+      if(reqUrl.colPath === undefined){
+        console.log('reqUrl ',reqUrl);
+        // 请求目录为空，返回首页内容 
+        Articles.find({},function(err, articles){
+          callback(err, column, articles);
+        }).sort({_id:-1}).limit(20);
+      }else{
+        var allCol = [{categoryPath: reqUrl.colPath}];
+        for (let i = 0; i < column.length; i++) {
+          if(reqUrl.colPath === column[i].path){
+            // mongoose 自动解析_id 与id 字段相同      
+            parentId = column[i].parent;
+            currentId = column[i].id;
+            break;
           }
-          if(column[j].parent === currentId){
-            allCol.push({categoryPath: column[j].path});
+        }
+        if(!parentId){
+          for (let j = 0; j < column.length; j++) {
+            if(column[j].parent === currentId){
+              allCol.push({categoryPath: column[j].path});
+            }
           }
         }
+        // 如果当前请求目录是父目录，查询当前目录与子目录所有文章 
+        Articles.find({"$or": allCol},function(err, articles){
+          callback(err, column, articles);
+        }).sort({_id:-1}).limit(20);
       }
-      Articles.find({"$or": allCol},function(err, articles){
-        callback(err, column, articles);
-      })
     }
     ], 
     function (err, column, articles) {
@@ -128,52 +136,35 @@ function requireArticle (req, res, next, reqUrl){
       });
     },
     arti: function(callback) {
-      if(reqUrl.articlePath === undefined){
-        Articles.find({categoryPath: reqUrl.colPath},function(err, article){
-          callback(err, article);
-        }).sort({_id:-1}).limit(10);
-      }else{
-        Articles.findOne({_id: reqUrl.articlePath},function(err, article){
-          callback(err, article);
-        })
-      }
+      Articles.findById({_id: idDiscode(reqUrl.artPath)},function(err, article){
+        callback(err, article);
+      });
     }
   },
   function(err, results) {
     if(err){
       console.log(err)
-      return err;
+      return next();
     }
-        
+    if(results.arti === null || results.arti === undefined){
+      return next();
+    }
+    var nav = [];
+    results.col.map(function(item){
+      if(!item.parent){
+        nav.push(item);
+      }
+    });
+    nav.sort(function(a, b){
+      return a.level - b.level;
+    });
+    results.arti.strDate = fromantDate(results.arti.date);
+    return res.render('./news/news',{
+      nav: nav, // 顶部目录导航
+      article: results.arti // 文章详情
+    });
   });
 }
-// Parallel({
-//   col: function(callback) {
-//     Columns.find({},function(err, column){
-//       callback(err, column);
-//     });
-//   },
-//   arti: function(callback) {
-//     Articles.find({},function(err, article){
-//       callback(err, article);
-//     }).sort({_id:-1}).limit(10);;
-//   }
-// },
-// function(err, results) {
-//   if(err) return res.render('error');
-//   var col = handleCol(results.col, req.baseUrl.slice(1))
-//   if(!col){
-//     next()
-//   }
-//   var articleList = handleArti(results.arti)
-//   return res.render('./news/index',{
-//     nav: col.nav, // 侧边目录导航
-//     currentType: col.currentType, // 当前子类
-//     index: col.index, // 是否请求首页
-//     artiList: articleList // 文章列表
-//   });  
-// });
-
 // 解析目录
 function handleCol (col, url) {
   var docment = JSON.parse(JSON.stringify(col));
@@ -240,7 +231,8 @@ function handleCol (col, url) {
 function handleArti(articles){
   for(let i = 0; i < articles.length; i++){
     articles[i].strDate = fromantDate(articles[i].date);
-    articles[i].articlePath = articles[i].categoryPath + '/' + articles[i]._id + '.html'
+    articles[i].articlePath = articles[i].categoryPath + '/' + idEncode(articles[i]._id) + '.html'
+    console.log('articles',articles[i].articlePath)
   }
   return articles
 }
@@ -277,4 +269,28 @@ function getColAndArticlePath(url){
   }
   reqUrl.colPath = urls[1];
   return reqUrl
+}
+// mongo ID 简单混淆
+var chars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+function idEncode(id){
+  id = String(id)
+  if(typeof id !== 'string' || id.length !== 24){
+    return id
+  }
+  var start = id.slice(0,3);
+  var middle = id.slice(3,6);
+  var end = id.slice(6);
+  var str1 = chars[Math.floor(Math.random() * 16)];
+  var str2 = chars[Math.floor(Math.random() * 16)];
+  return start + str1 + middle + str2 + end;
+}
+function idDiscode(id){
+  id = String(id)
+  if(typeof id !== 'string' || id.length !== 26){
+    return id
+  }
+  var start = id.slice(0,3);
+  var middle = id.slice(4,7);
+  var end = id.slice(8);
+  return start + middle + end;
 }
