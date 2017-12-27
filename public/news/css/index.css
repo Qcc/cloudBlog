@@ -25,8 +25,6 @@ a:visited {color:#999;}  /* 已访问链接 */
 a:hover {color:#4777FF;}  /* 鼠标移动到链接上 */
 a:active {color:#222;}  /* 鼠标点击时 */
 
-
-
 /*头部 */
 .index-header-continner{
   width: 100%;
@@ -114,13 +112,10 @@ a:active {color:#222;}  /* 鼠标点击时 */
   color: #444;
 }
 
-.nav-item:link{}
-.nav-item:visited{}
 .nav-item:hover{
   background-color: #4777FF;
   color: #fff;
 }
-.nav-item:active{}
 .menu-list>li>a{
   display: block;
   width: 110px;
