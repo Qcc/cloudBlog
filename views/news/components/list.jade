@@ -2,25 +2,51 @@
 div.list-box
   ul
     - for (var x = 0; x < artiList.length; x++)
-      li
-        div.list-content
-          div.left-img
-            a(class="link-warp" href=artiList[x].articlePath)
-              img(src=artiList[x].titleImg, alt="11")
-          div.right-news
-            div.right-article
-              div.article-title
-                a(href=artiList[x].articlePath)=artiList[x].title
-              div.article-footer
-                a(href=artiList[x].categoryPath class="article-type")=artiList[x].categoryLabel
-                a(href=artiList[x].articlePath class="article-author") &nbsp;⋅ #{artiList[x].author}     
-                a(href=artiList[x].articlePath class="article-time") &nbsp;⋅ #{artiList[x].strDate}
-              div.article-view
-                a(href=artiList[x].articlePath)
-                  svg(class="icon" aria-hidden="true")
-                     use(xlink:href="#icon-liulan2")
-                  span=artiList[x].view
-                a(href=artiList[x].articlePath)
-                  svg(class="icon" aria-hidden="true")
-                     use(xlink:href="#icon-fabulous")
-                  span=artiList[x].like
+      if artiList[x].titleImg
+        li
+          div.list-content
+            div.left-img
+              a(class="link-warp" href=artiList[x].articlePath)
+                img(src=artiList[x].titleImg, alt=artiList[x].title)
+            div.right-news
+              div.right-article
+                div.article-title
+                  a(href=artiList[x].articlePath)=artiList[x].title
+                div
+                  div.article-footer
+                    a(href=artiList[x].categoryPath class="article-type")=artiList[x].categoryLabel
+                    a(href=artiList[x].articlePath class="article-author") &nbsp;⋅ #{artiList[x].author}     
+                    a(href=artiList[x].articlePath class="article-time") &nbsp;⋅ #{artiList[x].strDate}
+                  div.article-view
+                    a(href=artiList[x].articlePath title="浏览")
+                      svg(class="icon" aria-hidden="true")
+                         use(xlink:href="#icon-chakan")
+                      span=artiList[x].view
+                    a(href=artiList[x].articlePath title="点赞")
+                      svg(class="icon" aria-hidden="true")
+                         use(xlink:href="#icon-fabulous")
+                      span=artiList[x].like
+      else
+        li
+          div.list-content-noimg
+            div.right-news
+              div.right-article
+                div.article-title
+                  div.article-title-primary
+                    a(href=artiList[x].articlePath)=artiList[x].title
+                  div.article-summary
+                    p=artiList[x].summary
+                div
+                  div.article-footer
+                    a(href=artiList[x].categoryPath class="article-type")=artiList[x].categoryLabel
+                    a(href=artiList[x].articlePath class="article-author") &nbsp;⋅ #{artiList[x].author}     
+                    a(href=artiList[x].articlePath class="article-time") &nbsp;⋅ #{artiList[x].strDate}
+                  div.article-view
+                    a(href=artiList[x].articlePath title="浏览")
+                      svg(class="icon" aria-hidden="true")
+                         use(xlink:href="#icon-chakan")
+                      span=artiList[x].view
+                    a(href=artiList[x].articlePath title="点赞")
+                      svg(class="icon" aria-hidden="true")
+                         use(xlink:href="#icon-fabulous")
+                      span=artiList[x].like
