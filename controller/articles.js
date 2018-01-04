@@ -17,12 +17,26 @@ module.exports = {
     }
   },
   updateArticle:function (req, res, next) {
-
   },
   queryArticle:function (req, res, next) {
-    
+    var params = {};
+    if(req.params === null){
+      params.type = req.column;
+    }
+    Articles.find(params, function(err,doc){
+      if(err){
+        return res.send({status: -1, msg: '数据库查询错误'});
+      }
+      return res.send({status: 200, entity: doc});
+    }).sort({_id:-1}).limit(10);;
   },
   deleteArticle:function (req, res, next) {
-    
+    console.log('params ', req.body);
+    Articles.remove({_id: req.body.id}, function(err, doc){
+      if(err){
+        return res.send({status: -1, msg: '数据库错误,未删除'});        
+      }
+      return res.send({status: 200, msg: '文章已删除'});              
+    })
   }
 }

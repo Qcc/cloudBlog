@@ -35,10 +35,25 @@ router.get('/section.api',function(req,res,next){
 router.post('/upload.api',Upload.uploadImg,function(req,res,next){
   Upload.upload(req, res, next);
 });
+// 获取文章
+router.get('/article.api',function(req,res,next){
+  console.log('router ',req.body)
+  Articles.queryArticle(req, res, next);
+});
 // 发表文章
 router.post('/article.api',function(req,res,next){
   console.log('router ',req.body)
   Articles.createArticle(req, res, next);
+});
+// 修改文章
+router.put('/article.api',function(req,res,next){
+  console.log('router ',req.body)
+  Articles.createArticle(req, res, next);
+});
+// 删除文章
+router.delete('/article.api',function(req,res,next){
+  console.log('router ',req.body)
+  Articles.deleteArticle(req, res, next);
 });
 router.all('*',function(req,res,next){
   res.send({status: 404, msg: "can't found!"});
