@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var columnsController = require('../../controller/columns');
+var columnsController = require('../../controller/client/columns');
 
 router.get('/',function(req,res,next){
   console.log('find.js')

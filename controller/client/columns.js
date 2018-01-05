@@ -1,66 +1,66 @@
 // 网站分组类目管理
-var Columns = require('../models/columns');
-var Articles = require('../models/article');
+var Columns = require('../../models/columns');
+var Articles = require('../../models/article');
 var Parallel = require('async/parallel');
 var Waterfall = require('async/waterfall');
 
 module.exports = {
-  createColumns:function(req,res,next){
-    var columns = new Columns(req.body)
-    columns.save(cb);
-    function cb(err, doc){
-      if(err){
-        return res.send({status:-1, msg:err});
-      }else{
-        return res.send({status: 200, msg: '添加类目成功', entity: doc})
-      }
-    }
-  },
-  updateColumns: function(req, res, next){
-    if(req.body.sectionName){
-      Columns.update({_id: req.body._id}, {label:req.body.sectionName, path: req.body.sectionPath, type: req.body.sectionType},cb);
-    }else{
-      Columns.update(req.body.source, {level: req.body.target.level},function(err,doc){
-        console.log(err)
-        if(err) return res.send({status:-2, msg:err});
-        Columns.update(req.body.target, {level: req.body.source.level},cb);
-      });
-    }
-    function cb(err, doc){
-      if(err){
-        return res.send({status:-2, msg:err});
-      }else{
-        return res.send({status: 200, msg: '更新成功'})
-      }
-    }
-  },
-  deleteColumns: function(req, res, next){
-    Columns.find({"parent": req.body._id},function(err, doc){
-      if(err) return res.send({status:-1, msg:err});
-      if(doc.length === 0 ){
-        Columns.remove({_id: req.body._id}, cb)
-      }else{
-        return res.send({status:-1, msg:'类目不为空不允许删除，请先删除子类目。'});
-      }
-    })
-    function cb(err, doc){
-      if(err){
-        return res.send({status:-1, msg:err});
-      }else{
-        return res.send({status: 200, msg: '删除成功'})
-      }
-    }
-  },
-  queryColumns: function(req, res, next){
-    Columns.find({},function(err, doc){
-      console.log('sql ',doc[3]._id);
-      if(err){
-        return res.send({status:-1, msg:err});
-      }else{
-        return res.send({status: 200, msg: 'ok', entity: doc});
-      }
-    });
-  },
+  // createColumns:function(req,res,next){
+  //   var columns = new Columns(req.body)
+  //   columns.save(cb);
+  //   function cb(err, doc){
+  //     if(err){
+  //       return res.send({status:-1, msg:err});
+  //     }else{
+  //       return res.send({status: 200, msg: '添加类目成功', entity: doc})
+  //     }
+  //   }
+  // },
+  // updateColumns: function(req, res, next){
+  //   if(req.body.sectionName){
+  //     Columns.update({_id: req.body._id}, {label:req.body.sectionName, path: req.body.sectionPath, type: req.body.sectionType},cb);
+  //   }else{
+  //     Columns.update(req.body.source, {level: req.body.target.level},function(err,doc){
+  //       console.log(err)
+  //       if(err) return res.send({status:-2, msg:err});
+  //       Columns.update(req.body.target, {level: req.body.source.level},cb);
+  //     });
+  //   }
+  //   function cb(err, doc){
+  //     if(err){
+  //       return res.send({status:-2, msg:err});
+  //     }else{
+  //       return res.send({status: 200, msg: '更新成功'})
+  //     }
+  //   }
+  // },
+  // deleteColumns: function(req, res, next){
+  //   Columns.find({"parent": req.body._id},function(err, doc){
+  //     if(err) return res.send({status:-1, msg:err});
+  //     if(doc.length === 0 ){
+  //       Columns.remove({_id: req.body._id}, cb)
+  //     }else{
+  //       return res.send({status:-1, msg:'类目不为空不允许删除，请先删除子类目。'});
+  //     }
+  //   })
+  //   function cb(err, doc){
+  //     if(err){
+  //       return res.send({status:-1, msg:err});
+  //     }else{
+  //       return res.send({status: 200, msg: '删除成功'})
+  //     }
+  //   }
+  // },
+  // queryColumns: function(req, res, next){
+  //   Columns.find({},function(err, doc){
+  //     console.log('sql ',doc[3]._id);
+  //     if(err){
+  //       return res.send({status:-1, msg:err});
+  //     }else{
+  //       return res.send({status: 200, msg: 'ok', entity: doc});
+  //     }
+  //   });
+  // },
   
   clientQueryColumn:function(req, res, next){
     var reqUrl = getColAndArticlePath(req.baseUrl);
@@ -136,7 +136,7 @@ function requireArticle (req, res, next, reqUrl){
       });
     },
     arti: function(callback) {
-      Articles.findById({_id: idDiscode(reqUrl.artPath)},function(err, article){
+      Articles.findOne({_id: idDiscode(reqUrl.artPath), categoryPath: reqUrl.colPath},function(err, article){
         callback(err, article);
       });
     }

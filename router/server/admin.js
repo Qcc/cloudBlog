@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Columns = require('../../controller/columns');
-var Upload = require('../../controller/upload');
-var Articles = require('../../controller/articles');
+var Columns = require('../../controller/server/columns');
+var Upload = require('../../controller/server/upload');
+var Articles = require('../../controller/server/articles');
 
 // 跨域访问设置
 //allow custom header and CORS
@@ -37,7 +37,7 @@ router.post('/upload.api',Upload.uploadImg,function(req,res,next){
 });
 // 获取文章
 router.get('/article.api',function(req,res,next){
-  console.log('router ',req.body)
+  console.log('router ',req.query)
   Articles.queryArticle(req, res, next);
 });
 // 发表文章
@@ -48,7 +48,7 @@ router.post('/article.api',function(req,res,next){
 // 修改文章
 router.put('/article.api',function(req,res,next){
   console.log('router ',req.body)
-  Articles.createArticle(req, res, next);
+  Articles.updateArticle(req, res, next);
 });
 // 删除文章
 router.delete('/article.api',function(req,res,next){

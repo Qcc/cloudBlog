@@ -1,4 +1,4 @@
-var columnsController = require('../controller/columns');
+// var columnsController = require('../controller/columns');
 module.exports = function(app){
   // server端
   app.use('/kevin',require('./server/admin.js'));  
