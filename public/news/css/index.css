@@ -19,7 +19,7 @@ a{
   outline: 0;
   cursor: pointer;
   transition: color .2s ease;
-}
+}.middle-warp
 a:link {color:#222;}      /* 未访问链接*/
 a:visited {color:#999;}  /* 已访问链接 */
 a:hover {color:#4777FF;}  /* 鼠标移动到链接上 */
@@ -460,7 +460,8 @@ a:active {color:#222;}  /* 鼠标点击时 */
   margin: 0 auto;
   height: 58px;
   background: #fff;
-  box-shadow: 0 1px 4px 0 rgba(0,0,0,.12);
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  /*box-shadow: 0 1px 4px 0 rgba(0,0,0,.12);*/
 }
 .logo-box{
   width: 110px;
