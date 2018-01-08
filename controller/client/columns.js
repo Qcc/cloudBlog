@@ -5,63 +5,6 @@ var Parallel = require('async/parallel');
 var Waterfall = require('async/waterfall');
 
 module.exports = {
-  // createColumns:function(req,res,next){
-  //   var columns = new Columns(req.body)
-  //   columns.save(cb);
-  //   function cb(err, doc){
-  //     if(err){
-  //       return res.send({status:-1, msg:err});
-  //     }else{
-  //       return res.send({status: 200, msg: '添加类目成功', entity: doc})
-  //     }
-  //   }
-  // },
-  // updateColumns: function(req, res, next){
-  //   if(req.body.sectionName){
-  //     Columns.update({_id: req.body._id}, {label:req.body.sectionName, path: req.body.sectionPath, type: req.body.sectionType},cb);
-  //   }else{
-  //     Columns.update(req.body.source, {level: req.body.target.level},function(err,doc){
-  //       console.log(err)
-  //       if(err) return res.send({status:-2, msg:err});
-  //       Columns.update(req.body.target, {level: req.body.source.level},cb);
-  //     });
-  //   }
-  //   function cb(err, doc){
-  //     if(err){
-  //       return res.send({status:-2, msg:err});
-  //     }else{
-  //       return res.send({status: 200, msg: '更新成功'})
-  //     }
-  //   }
-  // },
-  // deleteColumns: function(req, res, next){
-  //   Columns.find({"parent": req.body._id},function(err, doc){
-  //     if(err) return res.send({status:-1, msg:err});
-  //     if(doc.length === 0 ){
-  //       Columns.remove({_id: req.body._id}, cb)
-  //     }else{
-  //       return res.send({status:-1, msg:'类目不为空不允许删除，请先删除子类目。'});
-  //     }
-  //   })
-  //   function cb(err, doc){
-  //     if(err){
-  //       return res.send({status:-1, msg:err});
-  //     }else{
-  //       return res.send({status: 200, msg: '删除成功'})
-  //     }
-  //   }
-  // },
-  // queryColumns: function(req, res, next){
-  //   Columns.find({},function(err, doc){
-  //     console.log('sql ',doc[3]._id);
-  //     if(err){
-  //       return res.send({status:-1, msg:err});
-  //     }else{
-  //       return res.send({status: 200, msg: 'ok', entity: doc});
-  //     }
-  //   });
-  // },
-  
   clientQueryColumn:function(req, res, next){
     var reqUrl = getColAndArticlePath(req.baseUrl);
     console.log('reqUrl ', reqUrl);
@@ -129,42 +72,67 @@ function requireColumn (req, res, next, reqUrl){
   });
 }
 function requireArticle (req, res, next, reqUrl){
-  Parallel({
-    col: function(callback) {
+  Waterfall([
+    function(callback) {
       Columns.find({},function(err, column){
         callback(err, column);
       });
     },
-    arti: function(callback) {
+    function (column, callback) {
       Articles.findOne({_id: idDiscode(reqUrl.artPath), categoryPath: reqUrl.colPath},function(err, article){
-        callback(err, article);
+        callback(err, column, article);
       });
-    }
-  },
-  function(err, results) {
-    if(err){
-      console.log(err)
-      return next();
-    }
-    if(results.arti === null || results.arti === undefined){
-      return next();
-    }
-    var nav = [];
-    results.col.map(function(item){
-      if(!item.parent){
-        nav.push(item);
+    },
+    function (column, article, callback) {
+      if (!article) {
+        console.log('没有查到文章')
+        return next();
       }
-    });
-    nav.sort(function(a, b){
-      return a.level - b.level;
-    });
-    results.arti.strDate = fromantDate(results.arti.date);
-    return res.render('./news/news',{
-      nav: nav, // 顶部目录导航
-      article: results.arti // 文章详情
-    });
+      var keywords = []
+      for (var i = 0; i < article.keyword.length; i++) {
+        keywords.push({keyword: article.keyword[i]});
+      }
+      console.log('keyword ', keywords);
+      Articles.find({"title":{$ne: article.title},$or : keywords }, function(err, related){
+        callback(err, column, article, related);
+      }).limit(10).sort({_id:-1});
+    },
+    function (column, article, related, callback) {
+      var keywords = []
+      for (var i = 0; i < article.keyword.length; i++) {
+        keywords.push({keyword: article.keyword[i]});
+      }
+      Articles.count({"title":{$ne: article.title},$or : keywords }, function(err, relatedCount){
+        callback(err, column, article, related, relatedCount);
+      }); 
+    }],
+    function(err, column, article, related, relatedCount) {
+      if(err){
+        console.log('查询出错了',err)
+        return next();
+      }
+      var nav = [];
+      column.map(function(item){
+        if(!item.parent){
+          nav.push(item);
+        }
+      });
+      nav.sort(function(a, b){
+        return a.level - b.level;
+      });
+      article.strDate = fromantDate(article.date);
+      var relatedList = handleArti(related)
+      console.log('related' ,relatedList.length);
+      return res.render('./news/news',{
+        nav: nav, // 顶部目录导航
+        article: article, // 文章详情
+        relatedCount: relatedCount, // 相关推荐文章总数
+        relatedList: relatedList // 相关文章推荐
+      });
   });
 }
+// db.articles.find({"title":{$ne: article.title},$or : [ {keyword : keyword}]});
+
 // 解析目录
 function handleCol (col, url) {
   var docment = JSON.parse(JSON.stringify(col));

@@ -6,8 +6,8 @@ var Parallel = require('async/parallel');
 module.exports = {
   createArticle: function (req, res, next) {
     req.body.type = 'article';
-    req.body.view = Math.ceil(Math.random() * 2345 + 134);
-    req.body.like = Math.ceil(Math.random() * 234 + 14);
+    req.body.view = Math.ceil(Math.random() * 345 + 13);
+    req.body.like = Math.ceil(Math.random() * 134 + 4);
     var article = new Articles(req.body);
     article.save(cb);
     function cb(err, doc){
@@ -30,8 +30,12 @@ module.exports = {
   },
   queryArticle:function (req, res, next) {
     var params = {};
-    if(req.query.column === undefined){
-      params.type = req.query.column;
+    if(req.query.type !== ''){
+      params.categoryId = req.query.type;
+    }
+    if(req.query.search !== ''){
+      var reg =new RegExp(req.query.search,"gim");
+      params.title = reg;
     }
     var page = +req.query.currentPage;
     var limit = +req.query.limit;
@@ -42,12 +46,13 @@ module.exports = {
         });
       },
       articles: function(callback) {
-        Articles.find({}, function(err,doc){
+        console.log('params ',params);
+        Articles.find(params, function(err,doc){
           callback(err, doc);
         }).sort({_id:-1}).limit(limit).skip(page * limit);;
       },
       articlesCount: function(callback) {
-        Articles.count({}, function(err,doc){
+        Articles.count(params, function(err,doc){
           callback(err, doc);
         });
       }
