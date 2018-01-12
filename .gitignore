@@ -3,8 +3,9 @@ logs
 *.log
 npm-debug.log*
 yarn-debug.log*
+2018*
 yarn-error.log*
-uploads
+
 # Runtime data
 pids
 *.pid
