@@ -12,6 +12,11 @@ img{vertical-align:top;border:0;}
 ol,ul {list-style:none;} 
 h1,h2,h3,h4,h5,h6{font-size:14px; font-weight:normal;} 
 address,cite,code,em,th,span {font-weight:normal; font-style:normal;}
+pre{
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+}
 a{ 
   color: #222;
   background: 0 0;
@@ -1347,6 +1352,32 @@ a:active {color:#222;}  /* 鼠标点击时 */
   text-align: center;
   color: #fff;
   border-radius: 0 4px 4px 0;
+}
+/* 代码块样式 */
+
+pre>.code-style{
+  position:absolute;
+  right:3px;
+  top:2px;
+  width:40px;
+  height:16px;
+}
+pre>.code-style>span{
+  display: inline-block;
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  margin-left: 2px;
+  border: 1px solid #555;  
+}
+pre>.code-style>span:first-child{
+  background-color: #fff;
+}
+pre>.code-style>span:last-child{
+  background-color: #555;
+}
+pre>.code-style>.active{
+  border: 3px solid #999;    
 }
 
 

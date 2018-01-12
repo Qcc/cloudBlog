@@ -60,10 +60,57 @@ win.scroll(function(){
    nav.removeClass("fixed");
    sub.removeClass("sub-fixed");   
   }
-})
-
-
-
+});
+// 添加代码风格选择框
+$('pre').css('position','relative');
+$("<div class='code-style'><span class='active' title='light'></span><span title='dark'></span></div>").appendTo('pre');
+$('.code-style span').on('click', function(eventObj) {
+  setCodeStyle(eventObj.target.title)
+});
+var cookie = getCookie('codeStyle');
+if(cookie === 'light'){
+  setCodeStyle('light');
+}
+if(cookie === 'dark'){
+  setCodeStyle('dark');
+}
 });
 
+function setCodeStyle(style){
+  $('.code-style span').each(function(index,ele){
+    if(ele.title === style && style === 'light'){
+      ele.className = 'active'
+      $('#code-themes')[0].href = "/news/css/codeThemes/coy.css"
+      setCookie('codeStyle','light',999);
+    }else{
+      ele.className = ''        
+    }
+    if(ele.title === style && style === 'dark'){
+      ele.className = 'active'
+      $('#code-themes')[0].href = "/news/css/codeThemes/Okaidia.css"
+      setCookie('codeStyle','dark',999);        
+    }else{
+      ele.className = ''        
+    }
+  });
+}
 
+function setCookie(cname,cvalue,exdays)
+{
+  var d = new Date();
+  d.setTime(d.getTime()+(exdays*24*60*60*1000));
+  var expires = "expires="+d.toGMTString();
+  document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+ 
+function getCookie(cname)
+{
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0; i<ca.length; i++) 
+  {
+    var c = ca[i].trim();
+    if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+  }
+  return "";
+}

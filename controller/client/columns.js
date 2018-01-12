@@ -59,8 +59,9 @@ function requireColumn (req, res, next, reqUrl){
     ], 
     function (err, column, articles) {
       var col = handleCol(column, req.baseUrl.slice(1))
+      console.log('col---',col)
       if(!col){
-        next();
+        return next();
       }
       var articleList = handleArti(articles)
       return res.render('./news/index',{
@@ -135,6 +136,7 @@ function requireArticle (req, res, next, reqUrl){
 
 // 解析目录
 function handleCol (col, url) {
+  console.log('url  ',url)
   var docment = JSON.parse(JSON.stringify(col));
   var activeMenu = url;
   var nav = []
@@ -193,7 +195,9 @@ function handleCol (col, url) {
   if(!isRouter){
     return null;
   }
-  return {nav: nav, currentType: currentType, index: index}
+  var navlist = {nav: nav, currentType: currentType, index: index}
+  console.log('navlist ', navlist)
+  return navlist;
 }
 // 处理文章
 function handleArti(articles){
