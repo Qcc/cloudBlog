@@ -43,7 +43,6 @@ var storage = multer.diskStorage({
   }
 })
 var uploadImg = multer({ storage: storage, fileFilter: fileFilter}).single('titleImg');
-// var upload = multer({ dest: 'public/uploads/' , fileFilter: fileFilter});
 module.exports = {
   uploadImg: uploadImg,
   upload: function (req, res ,next) {
