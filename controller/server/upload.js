@@ -46,12 +46,12 @@ var uploadImg = multer({ storage: storage, fileFilter: fileFilter}).single('titl
 module.exports = {
   uploadImg: uploadImg,
   upload: function (req, res ,next) {
-    if (req.file) {
+    if (req.file) {   
       res.set('Content-Type', 'text/plain')
       return res.send({
         "status": 200,
         "errno": 0,
-        "path": req.file.path.slice(req.file.path.indexOf('/') + 1),
+        "path": req.file.path.slice(req.file.path.indexOf('\\'))
       });
     }else{
       return  res.send({

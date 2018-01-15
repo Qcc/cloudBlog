@@ -203,7 +203,7 @@ function handleCol (col, url) {
 function handleArti(articles){
   for(let i = 0; i < articles.length; i++){
     articles[i].strDate = fromantDate(articles[i].date);
-    articles[i].articlePath = articles[i].categoryPath + '/' + idEncode(articles[i]._id) + '.html'
+    articles[i].articlePath = '/'+articles[i].categoryPath + '/' + idEncode(articles[i]._id) + '.html'
     console.log('articles',articles[i].articlePath)
   }
   return articles
