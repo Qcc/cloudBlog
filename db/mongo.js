@@ -20,4 +20,4 @@ db.on('close', function() {
   mongoose.connect(config.url, {server:{auto_reconnect:true}});
 });
 
-module.exports = db;
+// module.exports = db;

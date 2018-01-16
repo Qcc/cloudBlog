@@ -3,14 +3,22 @@ var Columns = require('../../models/columns');
 var Articles = require('../../models/article');
 var Parallel = require('async/parallel');
 var Waterfall = require('async/waterfall');
+var redis = require('../../db/redis');
 
 module.exports = {
   clientQueryColumn:function(req, res, next){
     var reqUrl = getColAndArticlePath(req.baseUrl);
-    console.log('reqUrl ', reqUrl);
     if(reqUrl.artPath){
-      // 请求的是页面 渲染详情页
-      requireArticle(req, res, next, reqUrl);
+      var exists = redis.exists(reqUrl.artPath,function(err,reply){
+        if(reply){
+          redis.HGETALL(reqUrl.artPath, function(err, redisData){
+            console.log('redisData ',redisData);
+          });
+        }else{
+          // 请求的是页面 渲染详情页
+          requireArticle(req, res, next, reqUrl);
+        }
+      });
     }else{
       // 请求的是类目，渲染列表   
       requireColumn(req, res, next, reqUrl);
@@ -28,7 +36,6 @@ function requireColumn (req, res, next, reqUrl){
       var currentId = '';
       var parentId = '';
       if(reqUrl.colPath === undefined){
-        console.log('reqUrl ',reqUrl);
         // 请求目录为空，返回首页内容 
         Articles.find({},function(err, articles){
           callback(err, column, articles);
@@ -59,7 +66,6 @@ function requireColumn (req, res, next, reqUrl){
     ], 
     function (err, column, articles) {
       var col = handleCol(column, req.baseUrl.slice(1))
-      console.log('col---',col)
       if(!col){
         return next();
       }
@@ -80,7 +86,7 @@ function requireArticle (req, res, next, reqUrl){
       });
     },
     function (column, callback) {
-      Articles.findOne({_id: idDiscode(reqUrl.artPath), categoryPath: reqUrl.colPath},function(err, article){
+      Articles.findOne({_id: reqUrl.artPath, categoryPath: reqUrl.colPath},function(err, article){
         callback(err, column, article);
       });
     },
@@ -93,7 +99,6 @@ function requireArticle (req, res, next, reqUrl){
       for (var i = 0; i < article.keyword.length; i++) {
         keywords.push({keyword: article.keyword[i]});
       }
-      console.log('keyword ', keywords);
       Articles.find({"title":{$ne: article.title},$or : keywords }, function(err, related){
         callback(err, column, article, related);
       }).limit(10).sort({_id:-1});
@@ -123,7 +128,11 @@ function requireArticle (req, res, next, reqUrl){
       });
       article.strDate = fromantDate(article.date);
       var relatedList = handleArti(related)
-      console.log('related' ,relatedList.length);
+      // 将查询到的数据缓存到redis中
+      redis.HSETNX (reqUrl.artPath,'nav',JSON.stringify(nav));
+      redis.HSETNX (reqUrl.artPath,'article',JSON.stringify(article));
+      redis.HSETNX (reqUrl.artPath,'relatedCount',JSON.stringify(relatedCount));
+      redis.HSETNX (reqUrl.artPath,'relatedList',JSON.stringify(relatedList));      
       return res.render('./news/news',{
         nav: nav, // 顶部目录导航
         article: article, // 文章详情
@@ -136,7 +145,6 @@ function requireArticle (req, res, next, reqUrl){
 
 // 解析目录
 function handleCol (col, url) {
-  console.log('url  ',url)
   var docment = JSON.parse(JSON.stringify(col));
   var activeMenu = url;
   var nav = []
@@ -196,15 +204,13 @@ function handleCol (col, url) {
     return null;
   }
   var navlist = {nav: nav, currentType: currentType, index: index}
-  console.log('navlist ', navlist)
   return navlist;
 }
 // 处理文章
 function handleArti(articles){
   for(let i = 0; i < articles.length; i++){
     articles[i].strDate = fromantDate(articles[i].date);
-    articles[i].articlePath = '/'+articles[i].categoryPath + '/' + idEncode(articles[i]._id) + '.html'
-    console.log('articles',articles[i].articlePath)
+    articles[i].articlePath = '/'+articles[i].categoryPath + '/' + articles[i]._id + '.html'
   }
   return articles
 }
@@ -243,26 +249,26 @@ function getColAndArticlePath(url){
   return reqUrl
 }
 // mongo ID 简单混淆
-var chars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
-function idEncode(id){
-  id = String(id)
-  if(typeof id !== 'string' || id.length !== 24){
-    return id
-  }
-  var start = id.slice(0,3);
-  var middle = id.slice(3,6);
-  var end = id.slice(6);
-  var str1 = chars[Math.floor(Math.random() * 16)];
-  var str2 = chars[Math.floor(Math.random() * 16)];
-  return start + str1 + middle + str2 + end;
-}
-function idDiscode(id){
-  id = String(id)
-  if(typeof id !== 'string' || id.length !== 26){
-    return id
-  }
-  var start = id.slice(0,3);
-  var middle = id.slice(4,7);
-  var end = id.slice(8);
-  return start + middle + end;
-}
+// var chars = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+// function idEncode(id){
+//   id = String(id)
+//   if(typeof id !== 'string' || id.length !== 24){
+//     return id
+//   }
+//   var start = id.slice(0,3);
+//   var middle = id.slice(3,6);
+//   var end = id.slice(6);
+//   var str1 = chars[Math.floor(Math.random() * 16)];
+//   var str2 = chars[Math.floor(Math.random() * 16)];
+//   return start + str1 + middle + str2 + end;
+// }
+// function idDiscode(id){
+//   id = String(id)
+//   if(typeof id !== 'string' || id.length !== 26){
+//     return id
+//   }
+//   var start = id.slice(0,3);
+//   var middle = id.slice(4,7);
+//   var end = id.slice(8);
+//   return start + middle + end;
+// }

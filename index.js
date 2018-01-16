@@ -7,6 +7,7 @@ var cfg = require('./config/default');
 var pkg = require('./package');
 var MongoStore = require('connect-mongo')(session);
 var router = require('./router/route');
+var port = require('./config/default').port;
 // 连接数据库
 require('./db/mongo');
 
@@ -41,7 +42,7 @@ app.locals.blog = {
 };
 router(app);
 
-var server = app.listen(3001, function () {
+var server = app.listen(port, function () {
   var host = server.address().address;
   var port = server.address().port;
   console.log('Example app listening at http://%s:%s', host, port);
