@@ -12,7 +12,13 @@ module.exports = {
       var exists = redis.exists(reqUrl.artPath,function(err,reply){
         if(reply){
           redis.HGETALL(reqUrl.artPath, function(err, redisData){
-            console.log('redisData ',redisData);
+            console.log('redis缓存渲染')
+            return res.render('./news/news',{
+              nav: JSON.parse(redisData.nav), // 顶部目录导航
+              article: JSON.parse(redisData.article), // 文章详情
+              relatedCount: JSON.parse(redisData.relatedCount), // 相关推荐文章总数
+              relatedList: JSON.parse(redisData.relatedList) // 相关文章推荐
+            });
           });
         }else{
           // 请求的是页面 渲染详情页
