@@ -12,7 +12,7 @@ module.exports = {
       var exists = redis.exists(reqUrl.artPath,function(err,reply){
         if(reply){
           redis.HGETALL(reqUrl.artPath, function(err, redisData){
-            console.log('redis缓存渲染')
+            console.log('redis缓存')
             return res.render('./news/news',{
               nav: JSON.parse(redisData.nav), // 顶部目录导航
               article: JSON.parse(redisData.article), // 文章详情
