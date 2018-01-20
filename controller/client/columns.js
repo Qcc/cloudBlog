@@ -4,27 +4,42 @@ var Articles = require('../../models/article');
 var Parallel = require('async/parallel');
 var Waterfall = require('async/waterfall');
 var redis = require('../../db/redis');
-
+const tag = new Date().getHours();
 module.exports = {
   clientQueryColumn:function(req, res, next){
     var reqUrl = getColAndArticlePath(req.baseUrl);
     if(reqUrl.artPath){
-      var exists = redis.exists(reqUrl.artPath,function(err,reply){
-        if(reply){
-          redis.HGETALL(reqUrl.artPath, function(err, redisData){
-            console.log('redis缓存')
-            return res.render('./news/news',{
-              nav: JSON.parse(redisData.nav), // 顶部目录导航
-              article: JSON.parse(redisData.article), // 文章详情
-              relatedCount: JSON.parse(redisData.relatedCount), // 相关推荐文章总数
-              relatedList: JSON.parse(redisData.relatedList) // 相关文章推荐
-            });
-          });
-        }else{
-          // 请求的是页面 渲染详情页
-          requireArticle(req, res, next, reqUrl);
-        }
+      //页面访问量view+1
+      Articles.update({_id: reqUrl.artPath},{$inc:{view: 1}},function(err,doc){
       });
+      // 实时页面访问量最大，计入redis 每小时更新
+      redis.ZINCRBY(reqUrl.colPath + tag,1,reqUrl.artPath,function(err, response){
+        console.log('gengxin',err,response)      
+      })
+      // 删除过去一小时的访问量缓存
+      redis.ZREMRANGEBYRANK (reqUrl.colPath + tag - 1,0,9999999,function(err, response){
+        console.log('shanchu',err,response)
+      })
+      requireArticle(req, res, next, reqUrl);      
+      // redis.exists(reqUrl.artPath,function(err,reply){
+      //   if(reply){
+      //     redis.HGETALL(reqUrl.artPath, function(err, redisData){
+      //       console.log('redis缓存')
+      // console.log('bestViewList ',redisData.bestViewList)
+            
+      //       return res.render('./news/news',{
+      //         nav: JSON.parse(redisData.nav), // 顶部目录导航
+      //         article: JSON.parse(redisData.article), // 文章详情
+      //         relatedCount: JSON.parse(redisData.relatedCount), // 相关推荐文章总数
+      //         relatedList: JSON.parse(redisData.relatedList), // 相关文章推荐
+      //         bestViewList: JSON.parse(redisData.bestViewList) // 热点文章
+      //       });
+      //     });
+      //   }else{
+      //     // 请求的是页面 渲染详情页
+      //     requireArticle(req, res, next, reqUrl);
+      //   }
+      // });
     }else{
       // 请求的是类目，渲染列表   
       requireColumn(req, res, next, reqUrl);
@@ -43,7 +58,7 @@ function requireColumn (req, res, next, reqUrl){
       var parentId = '';
       if(reqUrl.colPath === undefined){
         // 请求目录为空，返回首页内容 
-        Articles.find({},function(err, articles){
+        Articles.find({},{"content":0,"keyword":0},function(err, articles){
           callback(err, column, articles);
         }).sort({_id:-1}).limit(20);
       }else{
@@ -64,23 +79,39 @@ function requireColumn (req, res, next, reqUrl){
           }
         }
         // 如果当前请求目录是父目录，查询当前目录与子目录所有文章 
-        Articles.find({"$or": allCol},function(err, articles){
+        Articles.find({"$or": allCol},{"content":0,"keyword":0},function(err, articles){
           callback(err, column, articles);
         }).sort({_id:-1}).limit(20);
       }
-    }
-    ], 
-    function (err, column, articles) {
+    },
+    function(column, articles,callback){
+      redis.ZRANGE(reqUrl.colPath+tag,0,4,function(err,response){
+        callback(err, column, articles,response);
+      })
+    },
+    function(column, articles,response,callback){
+      var redian = []
+      for (var i = 0; i < response.length; i++) {
+        redian.push({_id: response[i]});
+      }
+      Articles.find({"_id":redian},{"content":0,"keyword":0}, function(err, bestView){
+        callback(err, column, articles,bestView);
+      }).limit(4);
+    }], 
+    function (err, column, articles, bestView) {
       var col = handleCol(column, req.baseUrl.slice(1))
       if(!col){
         return next();
       }
-      var articleList = handleArti(articles)
+      var articleList = handleArti(articles);
+      var bestViewList = handleArti(bestView);
+      // console.log('bestViewList ',bestViewList);
       return res.render('./news/index',{
         nav: col.nav, // 侧边目录导航
         currentType: col.currentType, // 当前子类
         index: col.index, // 是否请求首页
-        artiList: articleList // 文章列表
+        artiList: articleList, // 文章列表
+        bestViewList: bestViewList // 实时浏览最多文章        
       });
   });
 }
@@ -105,7 +136,7 @@ function requireArticle (req, res, next, reqUrl){
       for (var i = 0; i < article.keyword.length; i++) {
         keywords.push({keyword: article.keyword[i]});
       }
-      Articles.find({"title":{$ne: article.title},$or : keywords }, function(err, related){
+      Articles.find({"title":{$ne: article.title},$or : keywords },{"content":0,"keyword":0}, function(err, related){
         callback(err, column, article, related);
       }).limit(10).sort({_id:-1});
     },
@@ -117,8 +148,22 @@ function requireArticle (req, res, next, reqUrl){
       Articles.count({"title":{$ne: article.title},$or : keywords }, function(err, relatedCount){
         callback(err, column, article, related, relatedCount);
       }); 
+    },
+    function(column, article, related, relatedCount,callback){
+      redis.ZRANGE(reqUrl.colPath+tag,0,4,function(err,response){
+        callback(err, column, article, related, relatedCount,response);
+      })
+    },
+    function(column, article, related, relatedCount,response,callback){
+      var redian = []
+      for (var i = 0; i < response.length; i++) {
+        redian.push({_id: response[i]});
+      }
+      Articles.find({"_id":redian},{"content":0,"keyword":0}, function(err, bestView){
+        callback(err, column, article, related, relatedCount,bestView);
+      }).limit(4);
     }],
-    function(err, column, article, related, relatedCount) {
+    function(err, column, article, related, relatedCount, bestView) {
       if(err){
         console.log('查询出错了',err)
         return next();
@@ -132,14 +177,19 @@ function requireArticle (req, res, next, reqUrl){
       nav.sort(function(a, b){
         return a.level - b.level;
       });
+      
       article.strDate = fromantDate(article.date);
-      var relatedList = handleArti(related)
+      var relatedList = handleArti(related);
+      var bestViewList = handleArti(bestView);
       // 将查询到的数据缓存到redis中
-      redis.HSETNX (reqUrl.artPath,'nav',JSON.stringify(nav));
-      redis.HSETNX (reqUrl.artPath,'article',JSON.stringify(article));
-      redis.HSETNX (reqUrl.artPath,'relatedCount',JSON.stringify(relatedCount));
-      redis.HSETNX (reqUrl.artPath,'relatedList',JSON.stringify(relatedList));      
+      // redis.HSETNX (reqUrl.artPath,'nav',JSON.stringify(nav));
+      // redis.HSETNX (reqUrl.artPath,'article',JSON.stringify(article));
+      // redis.HSETNX (reqUrl.artPath,'relatedCount',JSON.stringify(relatedCount));
+      // redis.HSETNX (reqUrl.artPath,'relatedList',JSON.stringify(relatedList));
+      // redis.HSETNX (reqUrl.artPath,'bestViewList',JSON.stringify(bestViewList));
+      console.log('bestViewList ',bestViewList)
       return res.render('./news/news',{
+        bestViewList: bestViewList, // 实时浏览最多文章
         nav: nav, // 顶部目录导航
         article: article, // 文章详情
         relatedCount: relatedCount, // 相关推荐文章总数
@@ -217,6 +267,7 @@ function handleArti(articles){
   for(let i = 0; i < articles.length; i++){
     articles[i].strDate = fromantDate(articles[i].date);
     articles[i].articlePath = '/'+articles[i].categoryPath + '/' + articles[i]._id + '.html'
+    console.log('articles[i].articlePath ',articles[i].articlePath)
   }
   return articles
 }

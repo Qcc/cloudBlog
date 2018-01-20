@@ -2,27 +2,11 @@
 div.wrap-module
   div.module-title 浏览最多
   ul
-    li.hot-item
-      a(href="#")
-        div.hot-pic
-          img(src="/news/img/33.jpeg", alt="")
-        div.hot-article
-          p 大法官大法官的地,fgdsggs都是发生的发射的 士
-    li.hot-item
-      a(href="#")
-        div.hot-pic
-          img(src="/news/img/44.jpeg", alt="")
-        div.hot-article
-          p 来路开源土台哟陪伴你垃圾和，敢回家该行
-    li.hot-item
-      a(href="#")
-        div.hot-pic
-          img(src="/news/img/33.jpeg", alt="")
-        div.hot-article
-          p 大法官大法官的地,fgdsggs都是发生的发射的 士
-    li.hot-item
-      a(href="#")
-        div.hot-pic
-          img(src="/news/img/44.jpeg", alt="")
-        div.hot-article
-          p 来路开源土台哟陪伴你垃圾和，敢回家该行
+    - for (var x = 0; x < bestViewList.length; x++)
+      if(bestViewList.length < 4)
+        li.hot-item
+          a(href=bestViewList[x].articlePath)
+            div.hot-pic
+              img(src=bestViewList[x].titleImg, alt=bestViewList[x].title)
+            div.hot-article
+              p=bestViewList[x].title
