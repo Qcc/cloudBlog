@@ -5,7 +5,6 @@ mongoose.connect(mongoUri,{useMongoClient:true});
 // mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 
-
 db.once('open' ,() => {
   console.log('连接数据库成功')
 })
